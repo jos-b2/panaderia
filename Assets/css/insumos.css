@@ -1,0 +1,92 @@
+/* ==========================================================
+   ESTILOS UNIFICADOS DE INSUMOS - PANADERÍA DON LEO
+   Ubicación: /panaderia/Assets/css/insumos.css
+   ================================================---------- */
+
+/* Contenedor principal idéntico a panel.css para mantener la proporción */
+.main {
+    margin-left: 248px;
+    box-sizing: border-box;
+    width: calc(100% - 248px);
+    min-height: 100vh;
+    padding: 24px;
+    background-color: #Fbf6ee;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Botones de acción personalizados con estilo artesanal */
+.ins-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none !important;
+    transition: all 0.15s ease;
+}
+
+.ins-btn-primary {
+    background: #C98A3B;
+    color: #2d1b10;
+    border: 1px solid transparent;
+    box-shadow: 0 2px 4px rgba(201, 138, 59, 0.2);
+}
+
+.ins-btn-primary:hover {
+    background: #b47830;
+    color: #ffffff;
+}
+
+.ins-btn-line {
+    background: transparent;
+    border: 1px solid #EADFCE;
+    color: #4A2F20;
+}
+
+.ins-btn-line:hover {
+    background: #EADFCE;
+}
+
+/* Barra de progreso de existencia (Verde idéntica a tu diseño) */
+.ins-bar {
+    height: 7px;
+    background: #efe6d6;
+    border-radius: 99px;
+    overflow: hidden;
+    width: 130px;
+}
+
+.ins-bar i {
+    display: block;
+    height: 100%;
+    border-radius: 99px;
+    background: #3f7d4e;
+}
+
+/* Footer integrado unificado (Exactamente igual que en el panel) */
+.footer-panel {
+    background-color: #2a1f18 !important;
+    border-top: 1px solid #D4A373 !important;
+    color: #FEFAE0 !important;
+    text-align: center;
+    padding: 12px 0;
+    font-size: 0.85rem;
+    margin: auto -24px -24px -24px !important; /* Empuja el footer limpiamente al fondo del main */
+}
+
+/* Adaptación responsiva móvil */
+@media (max-width: 820px) {
+    .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 15px;
+    }
+    .footer-panel {
+        margin: 20px -15px -15px -15px !important;
+    }
+}

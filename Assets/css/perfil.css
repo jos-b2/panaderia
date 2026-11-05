@@ -1,0 +1,59 @@
+/**
+ * Estilos del Perfil - Panadería Don Leo
+ * Ubicación: /panaderia/Assets/css/perfil.css
+ */
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #FEFAE0; /* Color Crema */
+    color: #6B4226; /* Color Corteza */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.profile-card {
+    background-color: #FFFFFF;
+    max-width: 420px;
+    width: 100%;
+    border-radius: 2rem;
+    overflow: hidden;
+    box-shadow: 0px 1rem 1.5rem rgba(107, 66, 38, 0.2);
+    margin: 2rem auto;
+}
+
+.profile-banner {
+    background-position: center;
+    background-size: cover;
+    height: 11rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    position: relative;
+}
+
+.profile-avatar {
+    width: 7rem;
+    height: 7rem;
+    border-radius: 50%;
+    border: 4px solid #FFFFFF;
+    object-fit: cover;
+    transform: translateY(50%);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.3);
+    background-color: #D4A373;
+}
+
+.btn-custom-corteza {
+    background-color: #6B4226;
+    color: #FEFAE0;
+    font-weight: bold;
+    border: none;
+    border-radius: 1.5rem;
+    transition: background-color 0.2s;
+}
+
+.btn-custom-corteza:hover {
+    background-color: #5a3822;
+    color: #FEFAE0;
+}

@@ -1,0 +1,123 @@
+/* ==========================================================
+   ESTILOS EXCLUSIVOS DE LA VISTA DE PEDIDOS - PANADERÍA DON LEO
+   Ubicación: /panaderia/Assets/css/pedidos.css
+   ================================================---------- */
+
+/* Contenedor principal idéntico a las demás vistas */
+.main {
+    margin-left: 248px;
+    box-sizing: border-box;
+    width: calc(100% - 248px);
+    min-height: 100vh;
+    padding: 24px;
+    background-color: #FBF6EE;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Barra de acciones con filtros y buscador */
+.ped-actions-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.ped-search-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.ped-select {
+    border: 1px solid #EADFCE !important;
+    border-radius: 10px !important;
+    padding: 8px 14px !important;
+    background-color: #FFFFFF !important;
+    color: #4A2F20 !important;
+    font-size: 14px !important;
+    width: 140px !important;
+}
+
+.ped-input {
+    border: 1px solid #EADFCE !important;
+    border-radius: 10px !important;
+    padding: 8px 14px !important;
+    background-color: #FFFFFF !important;
+    color: #3b2a20 !important;
+    font-size: 14px !important;
+    width: 220px !important;
+}
+
+.ped-input:focus, .ped-select:focus {
+    border-color: #C98A3B !important;
+    box-shadow: 0 0 0 3px rgba(201, 138, 59, 0.15) !important;
+}
+
+.ped-btn-search {
+    background: transparent !important;
+    border: 1px solid #EADFCE !important;
+    color: #4A2F20 !important;
+    border-radius: 10px !important;
+    padding: 8px 16px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    transition: background 0.15s ease;
+}
+
+.ped-btn-search:hover {
+    background: #EADFCE !important;
+}
+
+/* Tarjeta contenedora de listado */
+.ped-card {
+    background: #FFFDF9;
+    border: 1px solid #EADFCE;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(74, 47, 32, 0.04);
+    padding: 24px;
+}
+
+.ped-card-title {
+    font-family: Georgia, 'Palatino Linotype', serif;
+    color: #4A2F20;
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+/* Footer institucional unificado */
+.footer-panel {
+    background-color: #2a1f18 !important;
+    border-top: 1px solid #D4A373 !important;
+    color: #FEFAE0 !important;
+    text-align: center;
+    padding: 12px 0;
+    font-size: 0.85rem;
+    margin: auto -24px -24px -24px !important;
+}
+
+/* Adaptación responsive móvil */
+@media (max-width: 820px) {
+    .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 15px;
+    }
+    .ped-actions-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .ped-search-group {
+        width: 100%;
+    }
+    .ped-select, .ped-input {
+        width: 100% !important;
+    }
+    .footer-panel {
+        margin: 20px -15px -15px -15px !important;
+    }
+}

@@ -1,0 +1,32 @@
+:root {
+  --color-trigo: #D4A373;
+  --color-corteza: #6B4226;
+  --color-crema: #FEFAE0;
+  --color-blanco: #FFFFFF;
+  --color-tarjeta-bg: rgba(35, 25, 18, 0.88);
+}
+
+body {
+  background-color: var(--color-crema);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* Tarjetas de Dashboard estilo ElZapato */
+.card-menu-item {
+  background-color: var(--color-tarjeta-bg) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+
+.card-menu-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
+  border-color: var(--color-trigo) !important;
+}
+
+.card-menu-item .card-icon {
+  font-size: 2.2rem;
+  color: var(--color-trigo);
+}

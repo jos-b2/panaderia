@@ -1,0 +1,139 @@
+/* ==========================================================
+   ESTILOS EXCLUSIVOS DE LA VISTA DE RECETAS - PANADERÍA DON LEO
+   Ubicación: /panaderia/Assets/css/recetas.css
+   ================================================---------- */
+
+/* Contenedor principal idéntico al panel e insumos */
+.main {
+    margin-left: 248px;
+    box-sizing: border-box;
+    width: calc(100% - 248px);
+    min-height: 100vh;
+    padding: 24px;
+    background-color: #FBF6EE;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Cuadrícula de recetas (2 columnas responsivas) */
+.rec-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+@media (max-width: 992px) {
+    .rec-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Tarjeta individual de receta */
+.rec-card {
+    background: #FFFDF9;
+    border: 1px solid #EADFCE;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(74, 47, 32, 0.04);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.rec-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 16px;
+}
+
+.rec-product-title {
+    font-family: Georgia, 'Palatino Linotype', serif;
+    color: #4A2F20;
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.rec-price-tag {
+    font-size: 15px;
+    color: #4A2F20;
+}
+
+.rec-price-tag strong {
+    font-size: 18px;
+    color: #4A2F20;
+}
+
+/* Detalles de rendimiento y costos */
+.rec-details-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+}
+
+.rec-row-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Lista de ingredientes */
+.rec-ingredients-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+    color: #3b2a20;
+}
+
+.rec-ingredients-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rec-ingredients-list li::before {
+    content: "•";
+    color: #C98A3B;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.rec-base-label {
+    color: #8A7565;
+    font-size: 12.5px;
+}
+
+/* Acciones de la tarjeta */
+.rec-card-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Footer institucional unificado */
+.footer-panel {
+    background-color: #2a1f18 !important;
+    border-top: 1px solid #D4A373 !important;
+    color: #FEFAE0 !important;
+    text-align: center;
+    padding: 12px 0;
+    font-size: 0.85rem;
+    margin: auto -24px -24px -24px !important;
+}
+
+/* Adaptación responsive móvil */
+@media (max-width: 820px) {
+    .main {
+        margin-left: 0;
+        width: 100%;
+        padding: 15px;
+    }
+    .footer-panel {
+        margin: 20px -15px -15px -15px !important;
+    }
+}
