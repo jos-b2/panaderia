@@ -1,9 +1,3 @@
-/* ==========================================================
-   ESTILOS EXCLUSIVOS DE LA VISTA DE ARQUEO DIARIO - PANADERÍA DON LEO
-   Ubicación: /panaderia/Assets/css/arqueo.css
-   ================================================---------- */
-
-/* Contenedor principal idéntico a las demás vistas */
 .main {
     margin-left: 248px;
     box-sizing: border-box;
@@ -16,7 +10,52 @@
     gap: 20px;
 }
 
-/* Tarjeta contenedora general */
+.arq-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    border-bottom: 2px solid #EADFCE;
+    padding-bottom: 10px;
+}
+
+.arq-tab-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: #8A7565;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.arq-tab-btn:hover {
+    background: #FFFDF9;
+    border-color: #EADFCE;
+}
+
+.arq-tab-btn.active {
+    background: #FFFDF9;
+    color: #4A2F20;
+    border: 1px solid #EADFCE;
+    border-bottom: 2px solid #C98A3B;
+}
+
+.arq-tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.arq-tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .arq-card {
     background: #FFFDF9;
     border: 1px solid #EADFCE;
@@ -32,7 +71,6 @@
     font-weight: 700;
 }
 
-/* Selector de fecha superior */
 .arq-date-picker-group {
     position: relative;
     display: flex;
@@ -42,21 +80,14 @@
 .arq-input-date {
     border: 1px solid #EADFCE !important;
     border-radius: 10px !important;
-    padding: 8px 36px 8px 14px !important;
+    padding: 8px 14px !important;
     background-color: #FFFFFF !important;
     color: #4A2F20 !important;
     font-size: 14px !important;
-    width: 140px !important;
+    width: 150px !important;
+    cursor: pointer;
 }
 
-.arq-calendar-icon {
-    position: absolute;
-    right: 12px;
-    pointer-events: none;
-    font-size: 14px;
-}
-
-/* Inputs dentro de la tabla de cuadre */
 .arq-table-input {
     width: 80px !important;
     border: 1px solid #EADFCE !important;
@@ -73,7 +104,6 @@
     box-shadow: 0 0 0 3px rgba(201, 138, 59, 0.15) !important;
 }
 
-/* Cuadrícula de 3 tarjetas de resumen inferiores */
 .arq-summary-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -123,7 +153,6 @@
     font-size: 12px;
 }
 
-/* Campos del formulario inferior */
 .arq-form-label {
     display: block;
     font-size: 12.5px;
@@ -146,7 +175,6 @@
     box-shadow: 0 0 0 3px rgba(201, 138, 59, 0.15) !important;
 }
 
-/* Footer institucional unificado */
 .footer-panel {
     background-color: #2a1f18 !important;
     border-top: 1px solid #D4A373 !important;
@@ -157,7 +185,6 @@
     margin: auto -24px -24px -24px !important;
 }
 
-/* Adaptación responsive móvil */
 @media (max-width: 820px) {
     .main {
         margin-left: 0;
@@ -166,5 +193,12 @@
     }
     .footer-panel {
         margin: 20px -15px -15px -15px !important;
+    }
+    .arq-tabs {
+        justify-content: center;
+    }
+    .arq-tab-btn {
+        flex: 1;
+        text-align: center;
     }
 }
