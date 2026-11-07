@@ -1,7 +1,11 @@
-/**
- * Lógica para la vista de Respaldos - Panadería Don Leo
- * Ubicación: /panaderia/Assets/js/respaldo.js
- */
 document.addEventListener('DOMContentLoaded', function () {
-    console.log("Módulo de Respaldos cargado correctamente.");
+    const form = document.getElementById('formRespaldo');
+    const btn = document.getElementById('btnCrearRespaldo');
+
+    if (form && btn) {
+        form.addEventListener('submit', function () {
+            btn.disabled = true;
+            btn.textContent = 'Generando respaldo...';
+        });
+    }
 });

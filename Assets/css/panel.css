@@ -177,8 +177,15 @@
 .bar-h, .bar-v {
     width: 8px;
     border-radius: 4px 4px 0 0;
-    background: #EADFCE;
     min-height: 4px;
+}
+
+.bar-h {
+    background: #C98A3B;
+}
+
+.bar-v {
+    background: #4A2F20;
 }
 
 .panel-day-label {
