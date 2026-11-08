@@ -1,36 +1,13 @@
 <?php
 /**
- * Componente / Vista de Perfil - Panadería Don Leo
+ * Vista: ventana de Perfil - Panadería Don Leo
  * Ubicación: /panaderia/src/Views/Public/perfil.php
+ * La prepara Controllers/PerfilController.php (GET)
  */
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+if (realpath($_SERVER["SCRIPT_FILENAME"]) === __FILE__) {
+    header("Location: /panaderia/Controllers/DashboardController.php");
+    exit;
 }
-
-if (!isset($_SESSION['user_id'])) {
-    exit('Acceso no autorizado');
-}
-
-require_once __DIR__ . '/../../../config/db.php';
-$usuario_id =$_SESSION['user_id'];
-
-try {
-    $stmt =$pdo->prepare("
-        SELECT U.nombre, U.rol, P.nombre_personalizado, P.foto_url, P.banner_url 
-        FROM usuarios U 
-        LEFT JOIN perfil P ON U.id = P.usuario_id 
-        WHERE U.id = :id
-    ");
-    $stmt->execute([':id' =>$usuario_id]);
-    $userData =$stmt->fetch();
-} catch (PDOException $e) {$userData = [];
-}
-
-$nombreUsuario = htmlspecialchars($userData['nombre_personalizado'] ?: ($_SESSION['user_nombre'] ?? 'Administrador'));
-$rolUsuario    = htmlspecialchars(strtoupper($userData['rol'] ?? 'ADMIN'));
-$fotoPerfil    =$userData['foto_url'] ?: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop';
-$bannerPerfil  =$userData['banner_url'] ?: 'https://images.unsplash.com/photo-1545703549-7bdb1d01b734?q=80&w=600&auto=format&fit=crop';
 ?>
 
 <div class="profile-card-modal-extended p-4">
@@ -124,7 +101,7 @@ $bannerPerfil  =$userData['banner_url'] ?: 'https://images.unsplash.com/photo-15
                         <i class="fa-solid fa-sliders me-2"></i>Personalizar Datos Visuales
                     </h6>
 
-                    <form id="formEditarPerfil" action="../../../Controllers/PerfilController.php" method="POST" enctype="multipart/form-data">
+                    <form id="formEditarPerfil" action="/panaderia/Controllers/PerfilController.php" method="POST" enctype="multipart/form-data">
                         <div class="row g-2">
                             <div class="col-12">
                                 <label class="form-label small fw-bold mb-1" style="color: #6B4226;">Nombre Visual:</label>

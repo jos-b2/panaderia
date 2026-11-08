@@ -1,95 +1,15 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+/**
+ * Vista: Respaldos - Panadería Don Leo
+ * Ubicación: /panaderia/src/Views/Admin/respaldo.php
+ * La prepara Controllers/RespaldoController.php
+ */
+// Si se abre esta vista directamente (dirección vieja), ir a su controlador
+if (realpath($_SERVER["SCRIPT_FILENAME"]) === __FILE__) {
+    header("Location: /panaderia/Controllers/RespaldoController.php");
+    exit;
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/panaderia/Config/db.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/panaderia/Config/current_user.php';
-
-$backupDir = $_SERVER['DOCUMENT_ROOT'] . '/panaderia/backups';
-if (!is_dir($backupDir)) {
-    mkdir($backupDir, 0755, true);
-}
-
-$mensaje = '';
-$tipo_alerta = '';
-
-if (isset($_GET['descargar'])) {
-    $archivo = basename($_GET['descargar']);
-    $ruta = $backupDir . '/' . $archivo;
-
-    if (preg_match('/^panaderia_[\w\-]+\.sql$/', $archivo) && file_exists($ruta)) {
-        header('Content-Description: File Transfer');
-        header('Content-Type: application/sql');
-        header('Content-Disposition: attachment; filename="' . $archivo . '"');
-        header('Content-Length: ' . filesize($ruta));
-        readfile($ruta);
-        exit;
-    } else {
-        $mensaje = "El archivo de respaldo no existe.";
-        $tipo_alerta = 'danger';
-    }
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    try {
-        $tablas = $pdo->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
-        $sqlDump = "-- Respaldo Panadería Don Leo\n-- Fecha: " . date('Y-m-d H:i:s') . "\n\nSET FOREIGN_KEY_CHECKS=0;\n\n";
-
-        foreach ($tablas as $tabla) {
-            $createStmt = $pdo->query("SHOW CREATE TABLE `{$tabla}`")->fetch(PDO::FETCH_ASSOC);
-            $sqlDump .= "DROP TABLE IF EXISTS `{$tabla}`;\n";
-            $sqlDump .= $createStmt['Create Table'] . ";\n\n";
-
-            $filas = $pdo->query("SELECT * FROM `{$tabla}`")->fetchAll(PDO::FETCH_ASSOC);
-            if (!empty($filas)) {
-                foreach ($filas as $fila) {
-                    $cols = array_map(fn($c) => "`{$c}`", array_keys($fila));
-                    $vals = array_map(function ($v) use ($pdo) {
-                        return $v === null ? 'NULL' : $pdo->quote((string)$v);
-                    }, array_values($fila));
-                    $sqlDump .= "INSERT INTO `{$tabla}` (" . implode(', ', $cols) . ") VALUES (" . implode(', ', $vals) . ");\n";
-                }
-                $sqlDump .= "\n";
-            }
-        }
-
-        $sqlDump .= "SET FOREIGN_KEY_CHECKS=1;\n";
-
-        $nombreArchivo = 'panaderia_' . date('Y-m-d_His') . '_manual.sql';
-        file_put_contents($backupDir . '/' . $nombreArchivo, $sqlDump);
-
-        header("Location: respaldo.php?ok=1");
-        exit;
-    } catch (PDOException $e) {
-        $mensaje = "Error al crear respaldo: " . $e->getMessage();
-        $tipo_alerta = 'danger';
-    }
-}
-
-if (isset($_GET['ok'])) {
-    $mensaje = "Respaldo creado correctamente.";
-    $tipo_alerta = 'success';
-}
-
-$archivos = glob($backupDir . '/*.sql') ?: [];
-usort($archivos, fn($a, $b) => filemtime($b) - filemtime($a));
-
-$listaRespaldos = [];
-foreach ($archivos as $ruta) {
-    $bytes = filesize($ruta);
-    $tam = $bytes >= 1048576
-        ? number_format($bytes / 1048576, 2) . ' MB'
-        : number_format(max(1, $bytes / 1024), 0) . ' KB';
-
-    $listaRespaldos[] = [
-        'archivo' => basename($ruta),
-        'fecha' => date('Y-m-d H:i', filemtime($ruta)),
-        'tam' => $tam
-    ];
-}
-
-$pagina_activa = 'respaldo';
 include_once __DIR__ . '/../Layouts/header.php';
 ?>
 
@@ -125,7 +45,7 @@ include_once __DIR__ . '/../Layouts/header.php';
                 <p class="text-muted mb-4" style="font-size: 14px; line-height: 1.6;">
                     Puede generar un respaldo completo de la base de datos en formato <strong>.sql</strong> en cualquier momento y descargarlo para resguardo.
                 </p>
-                <form method="post" action="respaldo.php" id="formRespaldo">
+                <form method="post" action="RespaldoController.php" id="formRespaldo">
                     <button type="submit" id="btnCrearRespaldo" class="btn text-white px-4 py-2.5" style="background: #4A2F20; border-radius: 10px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
                         Crear respaldo ahora
@@ -171,7 +91,7 @@ include_once __DIR__ . '/../Layouts/header.php';
                                     <td style="color: #4A2F20;"><?= htmlspecialchars($r['fecha']) ?></td>
                                     <td style="color: #4A2F20;"><?= htmlspecialchars($r['tam']) ?></td>
                                     <td class="text-end">
-                                        <a href="respaldo.php?descargar=<?= urlencode($r['archivo']) ?>" class="btn btn-sm btn-outline-secondary px-3 py-1" style="border-radius: 8px; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                                        <a href="RespaldoController.php?descargar=<?= urlencode($r['archivo']) ?>" class="btn btn-sm btn-outline-secondary px-3 py-1" style="border-radius: 8px; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
                                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                                             Descargar
                                         </a>

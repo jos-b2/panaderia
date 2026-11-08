@@ -8,6 +8,6 @@
 // Iniciar sesión global del sistema
 session_start();
 
-// Redirigir directamente a la vista de login ubicada en la carpeta Pública
-header("Location: src/Views/Public/login.php");
+// Redirigir al login (lo muestra AuthController)
+header("Location: Controllers/AuthController.php");
 exit();

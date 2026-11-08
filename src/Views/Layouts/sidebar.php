@@ -48,37 +48,37 @@ $tiene_foto = !empty($ruta_encontrada);
     </div>
 
     <nav>
-        <a href="dashboard.php" class="<?php echo ($pagina_activa === 'menu') ? 'on' : ''; ?>" title="Menú">
+        <a href="DashboardController.php" class="<?php echo ($pagina_activa === 'menu') ? 'on' : ''; ?>" title="Menú">
             <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             <span>Menú</span>
         </a>
 
-        <a href="panel.php" class="<?php echo ($pagina_activa === 'panel') ? 'on' : ''; ?>" title="Panel">
+        <a href="PanelController.php" class="<?php echo ($pagina_activa === 'panel') ? 'on' : ''; ?>" title="Panel">
             <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
             <span>Panel</span>
         </a>
 
-        <a href="insumos.php" class="<?php echo ($pagina_activa === 'insumos') ? 'on' : ''; ?>" title="Materia prima">
+        <a href="InsumosController.php" class="<?php echo ($pagina_activa === 'insumos') ? 'on' : ''; ?>" title="Materia prima">
             <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>
             <span>Materia prima</span>
         </a>
 
-        <a href="recetas.php" class="<?php echo ($pagina_activa === 'recetas') ? 'on' : ''; ?>" title="Recetas">
+        <a href="RecetasController.php" class="<?php echo ($pagina_activa === 'recetas') ? 'on' : ''; ?>" title="Recetas">
             <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3z"/><path d="M8 4v13"/></svg>
             <span>Recetas</span>
         </a>
 
-        <a href="produccion.php" class="<?php echo ($pagina_activa === 'produccion') ? 'on' : ''; ?>" title="Producción">
+        <a href="ProduccionController.php" class="<?php echo ($pagina_activa === 'produccion') ? 'on' : ''; ?>" title="Producción">
             <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s5 4 5 9a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3 1-5 1-8z"/></svg>
             <span>Producción</span>
         </a>
 
-        <a href="pedidos.php" class="<?php echo ($pagina_activa === 'pedidos') ? 'on' : ''; ?>" title="Pedidos">
+        <a href="PedidosController.php" class="<?php echo ($pagina_activa === 'pedidos') ? 'on' : ''; ?>" title="Pedidos">
             <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6"/></svg>
             <span>Pedidos</span>
         </a>
 
-        <a href="arqueo.php" class="<?php echo ($pagina_activa === 'arqueo') ? 'on' : ''; ?>" title="Arqueo diario">
+        <a href="ArqueoController.php" class="<?php echo ($pagina_activa === 'arqueo') ? 'on' : ''; ?>" title="Arqueo diario">
             <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 21h14M5 7h14"/><path d="M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0z"/></svg>
             <span>Arqueo diario</span>
         </a>
@@ -86,12 +86,12 @@ $tiene_foto = !empty($ruta_encontrada);
         <?php if ($rol_usuario === 'admin'): ?>
             <div class="side-section-label" style="padding: 10px 12px 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #d9c3a5; font-weight: bold;">Administración</div>
 
-            <a href="usuarios.php" class="<?php echo ($pagina_activa === 'usuarios') ? 'on' : ''; ?>" title="Usuarios">
+            <a href="UsuariosController.php" class="<?php echo ($pagina_activa === 'usuarios') ? 'on' : ''; ?>" title="Usuarios">
                 <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0M17 4a3.5 3.5 0 0 1 0 7M22 20a7 7 0 0 0-4-6"/></svg>
                 <span>Usuarios</span>
             </a>
             
-            <a href="respaldo.php" class="<?php echo ($pagina_activa === 'respaldo') ? 'on' : ''; ?>" title="Respaldos">
+            <a href="RespaldoController.php" class="<?php echo ($pagina_activa === 'respaldo') ? 'on' : ''; ?>" title="Respaldos">
                 <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>
                 <span>Respaldos</span>
             </a>

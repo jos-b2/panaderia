@@ -1,68 +1,69 @@
 <?php
 /**
- * Controlador de Autenticación Flexible - Panadería Don Leo
+ * Controlador de Autenticación - Panadería Don Leo
  * Ubicación: /panaderia/Controllers/AuthController.php
+ *
+ * GET  -> muestra el formulario de login
+ * POST -> valida credenciales y responde JSON (lo llama login.js)
  */
 
 session_start();
-require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../Config/db.php';
+require_once __DIR__ . '/../Models/UsuarioModel.php';
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    require __DIR__ . '/../src/Views/Public/login.php';
+    exit;
+}
 
 header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $usuario = trim($_POST['usuario'] ?? '');
-    $clave   = trim($_POST['clave'] ?? '');
+$usuario = trim($_POST['usuario'] ?? '');
+$clave   = trim($_POST['clave'] ?? '');
 
-    if (empty($usuario) || empty($clave)) {
-        echo json_encode(['status' => 'error', 'message' => 'Por favor, completa todos los campos.']);
+if (empty($usuario) || empty($clave)) {
+    echo json_encode(['status' => 'error', 'message' => 'Por favor, completa todos los campos.']);
+    exit;
+}
+
+try {
+    $usuarioModel = new UsuarioModel($pdo);
+    $user = $usuarioModel->buscarActivoPorUsuario($usuario);
+
+    if (!$user) {
+        echo json_encode(['status' => 'error', 'message' => 'Usuario o contraseña incorrectos.']);
         exit;
     }
 
-    try {
-        // Consultar el usuario activo
-        $stmt = $pdo->prepare("SELECT id, nombre, usuario, clave, rol FROM usuarios WHERE usuario = :usuario AND activo = 1 LIMIT 1");
-        $stmt->execute([':usuario' => $usuario]);
-        $user = $stmt->fetch();
+    $loginExitoso = false;
 
-        if (!$user) {
-            echo json_encode(['status' => 'error', 'message' => 'Usuario o contraseña incorrectos.']);
-            exit;
-        }
-
-        $loginExitoso = false;
-
-        // 1. Intento de verificación mediante Hash seguro
-        if (password_verify($clave, $user['clave'])) {
-            $loginExitoso = true;
-        } 
-        // 2. Soporte para contraseña en texto plano (Modificada manualmente en BD)
-        else if ($clave === $user['clave']) {
-            $loginExitoso = true;
-            
-            // Auto-encriptar la nueva clave en la BD para proteger el sistema
-            $nuevoHash = password_hash($clave, PASSWORD_DEFAULT);
-            $updateStmt = $pdo->prepare("UPDATE usuarios SET clave = :nuevaClave WHERE id = :id");
-            $updateStmt->execute([':nuevaClave' => $nuevoHash, ':id' => $user['id']]);
-        }
-
-        if ($loginExitoso) {
-            $_SESSION['user_id']     = $user['id'];
-            $_SESSION['user_nombre'] = $user['nombre'];
-            $_SESSION['user_rol']    = $user['rol'];
-
-            echo json_encode([
-                'status'   => 'success',
-                'message'  => '¡Bienvenido al sistema!',
-                'redirect' => '../Admin/dashboard.php'
-            ]);
-            exit;
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'Usuario o contraseña incorrectos.']);
-            exit;
-        }
-
-    } catch (PDOException $e) {
-        echo json_encode(['status' => 'error', 'message' => 'Error en el servidor: ' . $e->getMessage()]);
-        exit;
+    // 1. Verificación mediante hash seguro
+    if (password_verify($clave, $user['clave'])) {
+        $loginExitoso = true;
     }
+    // 2. Soporte para contraseña en texto plano (modificada manualmente en la BD)
+    else if ($clave === $user['clave']) {
+        $loginExitoso = true;
+        // Auto-cifrar la clave en la BD
+        $usuarioModel->guardarHash($user['id'], $clave);
+    }
+
+    if ($loginExitoso) {
+        $_SESSION['user_id']     = $user['id'];
+        $_SESSION['user_nombre'] = $user['nombre'];
+        $_SESSION['user_rol']    = $user['rol'];
+
+        echo json_encode([
+            'status'   => 'success',
+            'message'  => '¡Bienvenido al sistema!',
+            'redirect' => '/panaderia/Controllers/DashboardController.php'
+        ]);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Usuario o contraseña incorrectos.']);
+    }
+    exit;
+
+} catch (PDOException $e) {
+    echo json_encode(['status' => 'error', 'message' => 'Error en el servidor: ' . $e->getMessage()]);
+    exit;
 }

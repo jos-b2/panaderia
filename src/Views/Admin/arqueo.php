@@ -1,95 +1,15 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+/**
+ * Vista: Arqueo diario - Panadería Don Leo
+ * Ubicación: /panaderia/src/Views/Admin/arqueo.php
+ * La prepara Controllers/ArqueoController.php
+ */
+// Si se abre esta vista directamente (dirección vieja), ir a su controlador
+if (realpath($_SERVER["SCRIPT_FILENAME"]) === __FILE__) {
+    header("Location: /panaderia/Controllers/ArqueoController.php");
+    exit;
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/panaderia/Config/db.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/panaderia/Config/current_user.php';
-
-$mensaje = '';
-$tipo_alerta = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $fecha = $_POST['fecha_arqueo'] ?? date('Y-m-d');
-    $vendidas = $_POST['vendidas'] ?? [];
-    $sobrante = $_POST['sobrante'] ?? [];
-    $dinero_contado = (isset($_POST['dinero_contado']) && $_POST['dinero_contado'] !== '') ? (float)$_POST['dinero_contado'] : null;
-    $observaciones = trim($_POST['observaciones'] ?? '');
-
-    try {
-        $pdo->beginTransaction();
-
-        $stmtDet = $pdo->prepare("
-            INSERT INTO arqueo_detalle (fecha, producto_id, vendidas, sobrante)
-            VALUES (?, ?, ?, ?)
-            ON DUPLICATE KEY UPDATE vendidas = VALUES(vendidas), sobrante = VALUES(sobrante)
-        ");
-
-        foreach ($vendidas as $pid => $cant_v) {
-            $pid = (int)$pid;
-            $v = max(0, (int)$cant_v);
-            $s = max(0, (int)($sobrante[$pid] ?? 0));
-            $stmtDet->execute([$fecha, $pid, $v, $s]);
-        }
-
-        $stmtCaja = $pdo->prepare("
-            INSERT INTO arqueo_caja (fecha, caja_real, nota)
-            VALUES (?, ?, ?)
-            ON DUPLICATE KEY UPDATE caja_real = VALUES(caja_real), nota = VALUES(nota)
-        ");
-        $stmtCaja->execute([$fecha, $dinero_contado, $observaciones !== '' ? $observaciones : null]);
-
-        $pdo->commit();
-        header("Location: arqueo.php?fecha=" . urlencode($fecha) . "&ok=1");
-        exit;
-    } catch (PDOException $e) {
-        $pdo->rollBack();
-        $mensaje = "Error al guardar el arqueo: " . $e->getMessage();
-        $tipo_alerta = 'danger';
-    }
-}
-
-if (isset($_GET['ok'])) {
-    $mensaje = "Arqueo guardado correctamente.";
-    $tipo_alerta = 'success';
-}
-
-$fecha_sel = $_GET['fecha'] ?? date('Y-m-d');
-$fecha_ayer = date('Y-m-d', strtotime($fecha_sel . ' -1 day'));
-
-$productos = $pdo->query("SELECT id, nombre, precio FROM productos WHERE activo = 1 ORDER BY nombre ASC")->fetchAll();
-
-$stmtAyer = $pdo->prepare("SELECT producto_id, sobrante FROM arqueo_detalle WHERE fecha = ?");
-$stmtAyer->execute([$fecha_ayer]);
-$sobranteAyer = $stmtAyer->fetchAll(PDO::FETCH_KEY_PAIR);
-
-$stmtHorn = $pdo->prepare("SELECT producto_id, COALESCE(SUM(piezas), 0) FROM producciones WHERE fecha = ? AND anulada = 0 GROUP BY producto_id");
-$stmtHorn->execute([$fecha_sel]);
-$horneadasHoy = $stmtHorn->fetchAll(PDO::FETCH_KEY_PAIR);
-
-$stmtHoy = $pdo->prepare("SELECT producto_id, vendidas, sobrante FROM arqueo_detalle WHERE fecha = ?");
-$stmtHoy->execute([$fecha_sel]);
-$detalleHoy = [];
-foreach ($stmtHoy->fetchAll() as $row) {
-    $detalleHoy[(int)$row['producto_id']] = $row;
-}
-
-$stmtCajaHoy = $pdo->prepare("SELECT caja_real, nota FROM arqueo_caja WHERE fecha = ?");
-$stmtCajaHoy->execute([$fecha_sel]);
-$cajaHoy = $stmtCajaHoy->fetch() ?: ['caja_real' => '', 'nota' => ''];
-
-$historial = $pdo->query("
-    SELECT ac.fecha, ac.caja_real, ac.nota,
-           COALESCE(SUM(ad.vendidas * p.precio), 0) AS esperado
-    FROM arqueo_caja ac
-    LEFT JOIN arqueo_detalle ad ON ac.fecha = ad.fecha
-    LEFT JOIN productos p ON ad.producto_id = p.id
-    GROUP BY ac.fecha, ac.caja_real, ac.nota
-    ORDER BY ac.fecha DESC
-    LIMIT 15
-")->fetchAll();
-
-$pagina_activa = 'arqueo';
 include_once __DIR__ . '/../Layouts/header.php';
 ?>
 
@@ -125,7 +45,7 @@ include_once __DIR__ . '/../Layouts/header.php';
             <button type="button" class="arq-tab-btn" data-target="tab-historial">Historial</button>
         </div>
 
-        <form method="post" action="arqueo.php">
+        <form method="post" action="ArqueoController.php">
             <div class="arq-tab-content active" id="tab-cuadre">
                 <div class="arq-card mb-4">
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
@@ -260,7 +180,7 @@ include_once __DIR__ . '/../Layouts/header.php';
                                         <td class="text-end"><?= $h['caja_real'] !== null ? '$' . number_format((float)$h['caja_real'], 2) : '—' ?></td>
                                         <td class="small text-muted"><?= htmlspecialchars($h['nota'] ?? '-') ?></td>
                                         <td class="text-end">
-                                            <a href="arqueo.php?fecha=<?= urlencode($h['fecha']) ?>" class="btn btn-sm btn-outline-secondary" style="font-size: 12px;">Ver</a>
+                                            <a href="ArqueoController.php?fecha=<?= urlencode($h['fecha']) ?>" class="btn btn-sm btn-outline-secondary" style="font-size: 12px;">Ver</a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

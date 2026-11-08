@@ -1,119 +1,15 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+/**
+ * Vista: Recetas - Panadería Don Leo
+ * Ubicación: /panaderia/src/Views/Admin/recetas.php
+ * La prepara Controllers/RecetasController.php
+ */
+// Si se abre esta vista directamente (dirección vieja), ir a su controlador
+if (realpath($_SERVER["SCRIPT_FILENAME"]) === __FILE__) {
+    header("Location: /panaderia/Controllers/RecetasController.php");
+    exit;
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/panaderia/Config/db.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/panaderia/Config/current_user.php';
-
-$mensaje = '';
-$tipo_alerta = '';
-
-if (isset($_GET['toggle'])) {
-    $id_toggle = (int)$_GET['toggle'];
-    if ($id_toggle > 0) {
-        $stmt = $pdo->prepare("UPDATE productos SET activo = NOT activo WHERE id = ?");
-        $stmt->execute([$id_toggle]);
-        header("Location: recetas.php" . (isset($_GET['inactivos']) ? '?inactivos=1' : ''));
-        exit;
-    }
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $accion = $_POST['accion'] ?? '';
-    $nombre = trim($_POST['nombre'] ?? '');
-    $precio = (float)($_POST['precio'] ?? 0);
-    $base_insumo_id = (int)($_POST['base_insumo_id'] ?? 0);
-    $rendimiento = (float)($_POST['rendimiento'] ?? 1);
-    $ing_ids = $_POST['ing_id'] ?? [];
-    $ing_cants = $_POST['ing_cant'] ?? [];
-
-    if ($nombre !== '' && $base_insumo_id > 0 && $rendimiento > 0) {
-        try {
-            $pdo->beginTransaction();
-
-            if ($accion === 'crear') {
-                $stmtProd = $pdo->prepare("INSERT INTO productos (nombre, precio, base_insumo_id, rendimiento) VALUES (?, ?, ?, ?)");
-                $stmtProd->execute([$nombre, $precio, $base_insumo_id, $rendimiento]);
-                $producto_id = (int)$pdo->lastInsertId();
-            } elseif ($accion === 'editar') {
-                $producto_id = (int)($_POST['id'] ?? 0);
-                $stmtProd = $pdo->prepare("UPDATE productos SET nombre = ?, precio = ?, base_insumo_id = ?, rendimiento = ? WHERE id = ?");
-                $stmtProd->execute([$nombre, $precio, $base_insumo_id, $rendimiento, $producto_id]);
-                $pdo->prepare("DELETE FROM receta_items WHERE producto_id = ?")->execute([$producto_id]);
-            }
-
-            if (!empty($producto_id)) {
-                $stmtItem = $pdo->prepare("INSERT INTO receta_items (producto_id, insumo_id, cantidad) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE cantidad = VALUES(cantidad)");
-                foreach ($ing_ids as $idx => $iid) {
-                    $iid = (int)$iid;
-                    $cant = (float)($ing_cants[$idx] ?? 0);
-                    if ($iid > 0 && $iid !== $base_insumo_id && $cant > 0) {
-                        $stmtItem->execute([$producto_id, $iid, $cant]);
-                    }
-                }
-            }
-
-            $pdo->commit();
-            header("Location: recetas.php?ok=" . ($accion === 'editar' ? 'editado' : 'creado'));
-            exit;
-        } catch (PDOException $e) {
-            $pdo->rollBack();
-            $mensaje = "Error al guardar la receta: " . $e->getMessage();
-            $tipo_alerta = 'danger';
-        }
-    } else {
-        $mensaje = "Nombre, materia base y rendimiento son obligatorios.";
-        $tipo_alerta = 'warning';
-    }
-}
-
-if (isset($_GET['ok'])) {
-    $mensaje = $_GET['ok'] === 'editado' ? 'Receta actualizada correctamente.' : 'Producto y receta creados correctamente.';
-    $tipo_alerta = 'success';
-}
-
-$verInactivos = isset($_GET['inactivos']);
-$mostrarNuevo = isset($_GET['nuevo']);
-$editarId = (int)($_GET['editar'] ?? 0);
-
-$insumosActivos = $pdo->query("SELECT id, nombre, unidad, costo FROM insumos WHERE activo = 1 ORDER BY nombre ASC")->fetchAll();
-
-$productoEditar = null;
-$itemsEditar = [];
-if ($editarId > 0) {
-    $stmtEd = $pdo->prepare("SELECT * FROM productos WHERE id = ?");
-    $stmtEd->execute([$editarId]);
-    $productoEditar = $stmtEd->fetch();
-
-    if ($productoEditar) {
-        $stmtIt = $pdo->prepare("SELECT insumo_id, cantidad FROM receta_items WHERE producto_id = ?");
-        $stmtIt->execute([$editarId]);
-        $itemsEditar = $stmtIt->fetchAll();
-    }
-}
-
-$sqlProductos = "
-    SELECT p.*, i.nombre AS base_nombre, i.unidad AS base_unidad, i.costo AS base_costo
-    FROM productos p
-    JOIN insumos i ON p.base_insumo_id = i.id
-    " . ($verInactivos ? "" : "WHERE p.activo = 1 ") . "
-    ORDER BY p.activo DESC, p.nombre ASC
-";
-$productos = $pdo->query($sqlProductos)->fetchAll();
-
-$recetasItemsRaw = $pdo->query("
-    SELECT ri.producto_id, ri.cantidad, i.nombre, i.unidad, i.costo
-    FROM receta_items ri
-    JOIN insumos i ON ri.insumo_id = i.id
-")->fetchAll();
-
-$itemsPorProducto = [];
-foreach ($recetasItemsRaw as $ri) {
-    $itemsPorProducto[(int)$ri['producto_id']][] = $ri;
-}
-
-$pagina_activa = 'recetas';
 include_once __DIR__ . '/../Layouts/header.php';
 ?>
 
@@ -147,11 +43,11 @@ include_once __DIR__ . '/../Layouts/header.php';
         <?php endif; ?>
 
         <div class="mb-4 d-flex gap-2 flex-wrap align-items-center">
-            <a class="ins-btn ins-btn-primary" href="<?= $mostrarNuevo ? 'recetas.php' : 'recetas.php?nuevo=1' ?>" style="background: #C98A3B; color: #2d1b10; border-radius: 10px; padding: 9px 18px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+            <a class="ins-btn ins-btn-primary" href="<?= $mostrarNuevo ? 'RecetasController.php' : 'RecetasController.php?nuevo=1' ?>" style="background: #C98A3B; color: #2d1b10; border-radius: 10px; padding: 9px 18px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 <?= $mostrarNuevo ? 'Cerrar formulario' : 'Nuevo producto' ?>
             </a>
-            <a class="btn btn-outline-secondary" href="recetas.php<?= $verInactivos ? '' : '?inactivos=1' ?>" style="border-radius: 10px; padding: 8px 16px; font-weight: 600; font-size: 14px;">
+            <a class="btn btn-outline-secondary" href="RecetasController.php<?= $verInactivos ? '' : '?inactivos=1' ?>" style="border-radius: 10px; padding: 8px 16px; font-weight: 600; font-size: 14px;">
                 <?= $verInactivos ? 'Ocultar inactivos' : 'Mostrar inactivos' ?>
             </a>
         </div>
@@ -161,7 +57,7 @@ include_once __DIR__ . '/../Layouts/header.php';
                 <h3 class="rec-product-title mb-3">
                     <?= $productoEditar ? 'Editar receta: ' . htmlspecialchars($productoEditar['nombre']) : 'Nuevo producto y receta' ?>
                 </h3>
-                <form method="post" action="recetas.php">
+                <form method="post" action="RecetasController.php">
                     <input type="hidden" name="accion" value="<?= $productoEditar ? 'editar' : 'crear' ?>">
                     <?php if ($productoEditar): ?>
                         <input type="hidden" name="id" value="<?= (int)$productoEditar['id'] ?>">
@@ -224,7 +120,7 @@ include_once __DIR__ . '/../Layouts/header.php';
 
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn text-white px-4 py-2" style="background: #4A2F20; border-radius: 10px; font-weight: 600;">Guardar receta</button>
-                        <a href="recetas.php" class="btn btn-outline-secondary px-4 py-2" style="border-radius: 10px;">Cancelar</a>
+                        <a href="RecetasController.php" class="btn btn-outline-secondary px-4 py-2" style="border-radius: 10px;">Cancelar</a>
                     </div>
                 </form>
 
@@ -303,8 +199,8 @@ include_once __DIR__ . '/../Layouts/header.php';
                         </ul>
 
                         <div class="rec-card-actions">
-                            <a href="recetas.php?editar=<?= $pid ?>" class="btn btn-sm px-3 py-1.5" style="background: #C98A3B; color: #2d1b10; font-weight: 600; border-radius: 8px;">Editar</a>
-                            <a href="recetas.php?toggle=<?= $pid ?><?= $verInactivos ? '&inactivos=1' : '' ?>" class="btn btn-sm btn-outline-danger px-3 py-1.5 js-toggle-receta" style="border-radius: 8px; color: #b3392f; border-color: #eec5c2;">
+                            <a href="RecetasController.php?editar=<?= $pid ?>" class="btn btn-sm px-3 py-1.5" style="background: #C98A3B; color: #2d1b10; font-weight: 600; border-radius: 8px;">Editar</a>
+                            <a href="RecetasController.php?toggle=<?= $pid ?><?= $verInactivos ? '&inactivos=1' : '' ?>" class="btn btn-sm btn-outline-danger px-3 py-1.5 js-toggle-receta" style="border-radius: 8px; color: #b3392f; border-color: #eec5c2;">
                                 <?= $p['activo'] ? 'Desactivar' : 'Activar' ?>
                             </a>
                         </div>

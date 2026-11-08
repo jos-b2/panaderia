@@ -1,3 +1,13 @@
+<?php
+/**
+ * Vista: Login - Panadería Don Leo
+ * La muestra Controllers/AuthController.php (GET)
+ */
+if (realpath($_SERVER["SCRIPT_FILENAME"]) === __FILE__) {
+    header("Location: /panaderia/Controllers/AuthController.php");
+    exit;
+}
+?>
 <?php include_once __DIR__ . '/../Layouts/header.php'; ?>
 
 <!-- Enlazamos tu archivo CSS con su nombre exacto -->
@@ -12,7 +22,7 @@
 <div class="container">
     <!-- Formulario de Login -->
     <div class="form-box login">
-        <form action="../Admin/dashboard.php" method="POST">
+        <form action="/panaderia/Controllers/AuthController.php" method="POST">
             <h1>Iniciar Sesión</h1>
             
             <div class="input-box">

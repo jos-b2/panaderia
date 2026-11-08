@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 // Petición al controlador ubicado en la raíz
-                const response = await fetch('../../../Controllers/AuthController.php', {
+                const response = await fetch('/panaderia/Controllers/AuthController.php', {
                     method: 'POST',
                     body: formData
                 });

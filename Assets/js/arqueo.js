@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fechaInput = document.getElementById('fechaArqueo');
     if (fechaInput) {
         fechaInput.addEventListener('change', () => {
-            window.location.href = `arqueo.php?fecha=${encodeURIComponent(fechaInput.value)}`;
+            window.location.href = `ArqueoController.php?fecha=${encodeURIComponent(fechaInput.value)}`;
         });
     }
 

@@ -1,60 +1,15 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+/**
+ * Vista: Panel - Panadería Don Leo
+ * Ubicación: /panaderia/src/Views/Admin/panel.php
+ * La prepara Controllers/PanelController.php
+ */
+// Si se abre esta vista directamente (dirección vieja), ir a su controlador
+if (realpath($_SERVER["SCRIPT_FILENAME"]) === __FILE__) {
+    header("Location: /panaderia/Controllers/PanelController.php");
+    exit;
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/panaderia/Config/db.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/panaderia/Config/current_user.php';
-
-$horHoy = (int)$pdo->query("SELECT COALESCE(SUM(piezas), 0) FROM producciones WHERE fecha = CURDATE() AND anulada = 0")->fetchColumn();
-
-$ventasArqueo = (float)$pdo->query("SELECT COALESCE(SUM(ad.vendidas * p.precio), 0) FROM arqueo_detalle ad JOIN productos p ON ad.producto_id = p.id WHERE ad.fecha = CURDATE()")->fetchColumn();
-$abonosHoy = (float)$pdo->query("SELECT COALESCE(SUM(monto), 0) FROM abonos WHERE fecha = CURDATE()")->fetchColumn();
-$ventasHoy = $ventasArqueo + $abonosHoy;
-
-$activos = (int)$pdo->query("SELECT COUNT(*) FROM pedidos WHERE estado IN ('pendiente', 'en_produccion', 'listo')")->fetchColumn();
-
-$bajos = $pdo->query("SELECT nombre, unidad, stock, stock_minimo FROM insumos WHERE activo = 1 AND stock <= stock_minimo ORDER BY stock ASC")->fetchAll();
-
-$proximos = $pdo->query("
-    SELECT p.id, c.nombre AS cliente, p.descripcion, p.fecha_entrega, p.total,
-           COALESCE((SELECT SUM(a.monto) FROM abonos a WHERE a.pedido_id = p.id), 0) AS abonado
-    FROM pedidos p
-    JOIN clientes c ON p.cliente_id = c.id
-    WHERE p.estado IN ('pendiente', 'en_produccion', 'listo')
-    ORDER BY p.fecha_entrega ASC
-    LIMIT 6
-")->fetchAll();
-
-$dias_es = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-
-$prodSemana = $pdo->query("SELECT fecha, COALESCE(SUM(piezas), 0) AS total FROM producciones WHERE fecha >= DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND anulada = 0 GROUP BY fecha")->fetchAll(PDO::FETCH_KEY_PAIR);
-
-$ventArqueoSemana = $pdo->query("SELECT fecha, COALESCE(SUM(vendidas), 0) AS total FROM arqueo_detalle WHERE fecha >= DATE_SUB(CURDATE(), INTERVAL 6 DAY) GROUP BY fecha")->fetchAll(PDO::FETCH_KEY_PAIR);
-
-$ventPedidosSemana = $pdo->query("SELECT DATE(creado) AS fecha, COUNT(*) AS total FROM pedidos WHERE DATE(creado) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND estado != 'cancelado' GROUP BY DATE(creado)")->fetchAll(PDO::FETCH_KEY_PAIR);
-
-$chartDias = [];
-$maxVal = 1;
-$hayDatosSemana = !empty($ventArqueoSemana) || !empty($ventPedidosSemana) || !empty($prodSemana);
-
-for ($i = 6; $i >= 0; $i--) {
-    $ts = strtotime("-{$i} days");
-    $fechaStr = date('Y-m-d', $ts);
-    $h = (int)($prodSemana[$fechaStr] ?? 0);
-    $v = (int)($ventArqueoSemana[$fechaStr] ?? 0) + (int)($ventPedidosSemana[$fechaStr] ?? 0);
-
-    if ($h > $maxVal) $maxVal = $h;
-    if ($v > $maxVal) $maxVal = $v;
-
-    $chartDias[] = [
-        'label' => $dias_es[(int)date('w', $ts)] . ' ' . date('j', $ts),
-        'horneadas' => $h,
-        'vendidas' => $v
-    ];
-}
-
-$pagina_activa = 'panel';
 include_once __DIR__ . '/../Layouts/header.php';
 ?>
 
@@ -158,7 +113,7 @@ include_once __DIR__ . '/../Layouts/header.php';
             <div class="panel-card h-100">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h3 class="panel-card-title mb-0">Próximas entregas</h3>
-                    <a href="pedidos.php" class="btn btn-sm panel-btn-outline">Ver todos</a>
+                    <a href="PedidosController.php" class="btn btn-sm panel-btn-outline">Ver todos</a>
                 </div>
 
                 <?php if (empty($proximos)): ?>
@@ -186,7 +141,7 @@ include_once __DIR__ . '/../Layouts/header.php';
             <div class="panel-card mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h3 class="panel-card-title mb-0">Alertas de materia prima</h3>
-                    <a href="insumos.php" class="btn btn-sm panel-btn-outline">Ir a inventario</a>
+                    <a href="InsumosController.php" class="btn btn-sm panel-btn-outline">Ir a inventario</a>
                 </div>
 
                 <?php if (empty($bajos)): ?>

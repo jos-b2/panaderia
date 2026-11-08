@@ -10,7 +10,7 @@
                 <span class="fw-semibold">Diego</span>
                 <span class="badge text-bg-warning text-dark text-uppercase ms-1" style="font-size: 0.65rem;">ADMIN</span>
             </div>
-            <a href="/panaderia/src/Views/Public/login.php" class="btn btn-danger btn-sm px-3 rounded-3 d-flex align-items-center gap-2 fw-semibold">
+            <a href="/panaderia/Controllers/LogoutController.php" class="btn btn-danger btn-sm px-3 rounded-3 d-flex align-items-center gap-2 fw-semibold">
                 <i class="fa-solid fa-right-from-bracket"></i>
                 <span>Salir</span>
             </a>

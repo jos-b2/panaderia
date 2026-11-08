@@ -1,75 +1,15 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+/**
+ * Vista: Usuarios - Panadería Don Leo
+ * Ubicación: /panaderia/src/Views/Admin/usuarios.php
+ * La prepara Controllers/UsuariosController.php
+ */
+// Si se abre esta vista directamente (dirección vieja), ir a su controlador
+if (realpath($_SERVER["SCRIPT_FILENAME"]) === __FILE__) {
+    header("Location: /panaderia/Controllers/UsuariosController.php");
+    exit;
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/panaderia/Config/db.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/panaderia/Config/current_user.php';
-
-$mensaje = '';
-$tipo_alerta = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $accion = $_POST['accion'] ?? 'crear';
-
-    if ($accion === 'crear') {
-        $nombre = trim($_POST['nombre'] ?? '');
-        $usuario = trim($_POST['usuario'] ?? '');
-        $clave = $_POST['clave'] ?? '';
-        $rol = ($_POST['rol'] ?? 'empleado') === 'admin' ? 'admin' : 'empleado';
-
-        if ($nombre !== '' && $usuario !== '' && $clave !== '') {
-            try {
-                $stmtCheck = $pdo->prepare("SELECT id FROM usuarios WHERE usuario = ?");
-                $stmtCheck->execute([$usuario]);
-
-                if ($stmtCheck->fetch()) {
-                    $mensaje = "El usuario '{$usuario}' ya existe.";
-                    $tipo_alerta = 'danger';
-                } else {
-                    $hash = password_hash($clave, PASSWORD_DEFAULT);
-                    $stmt = $pdo->prepare("INSERT INTO usuarios (nombre, usuario, clave, rol) VALUES (?, ?, ?, ?)");
-                    $stmt->execute([$nombre, $usuario, $hash, $rol]);
-                    $mensaje = "Usuario creado correctamente.";
-                    $tipo_alerta = 'success';
-                }
-            } catch (PDOException $e) {
-                $mensaje = "Error al crear usuario: " . $e->getMessage();
-                $tipo_alerta = 'danger';
-            }
-        } else {
-            $mensaje = "Todos los campos son obligatorios.";
-            $tipo_alerta = 'warning';
-        }
-    } elseif ($accion === 'cambiar_clave') {
-        $id_usuario = (int)($_POST['id_usuario'] ?? 0);
-        $nueva_clave = $_POST['nueva_clave'] ?? '';
-
-        if ($id_usuario > 0 && trim($nueva_clave) !== '') {
-            try {
-                $hash = password_hash($nueva_clave, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("UPDATE usuarios SET clave = ?, debe_cambiar = 0 WHERE id = ?");
-                $stmt->execute([$hash, $id_usuario]);
-                $mensaje = "Clave actualizada correctamente.";
-                $tipo_alerta = 'success';
-            } catch (PDOException $e) {
-                $mensaje = "Error al actualizar la clave.";
-                $tipo_alerta = 'danger';
-            }
-        } else {
-            $mensaje = "Ingresa una nueva clave válida.";
-            $tipo_alerta = 'warning';
-        }
-    }
-}
-
-$stmtUsuarios = $pdo->query("SELECT id, nombre, usuario, rol, activo FROM usuarios ORDER BY id ASC");
-$lista_usuarios = $stmtUsuarios->fetchAll();
-
-$usuario_actual_id = $_SESSION['usuario_id'] ?? ($_SESSION['id'] ?? 0);
-$usuario_actual_nick = $_SESSION['usuario'] ?? '';
-
-$pagina_activa = 'usuarios';
 include_once __DIR__ . '/../Layouts/header.php';
 ?>
 
@@ -103,7 +43,7 @@ include_once __DIR__ . '/../Layouts/header.php';
             <div class="usr-card">
                 <h3 class="usr-card-title">Nuevo usuario</h3>
                 
-                <form method="post" action="usuarios.php">
+                <form method="post" action="UsuariosController.php">
                     <input type="hidden" name="accion" value="crear">
                     <div class="row g-2 mb-2">
                         <div class="col-md-7">
@@ -189,7 +129,7 @@ include_once __DIR__ . '/../Layouts/header.php';
                                         <?php endif; ?>
                                     </td>
                                     <td>
-                                        <form method="post" action="usuarios.php" class="d-flex gap-2 align-items-center m-0">
+                                        <form method="post" action="UsuariosController.php" class="d-flex gap-2 align-items-center m-0">
                                             <input type="hidden" name="accion" value="cambiar_clave">
                                             <input type="hidden" name="id_usuario" value="<?= (int)$u['id'] ?>">
                                             <input type="password" name="nueva_clave" class="form-control usr-table-input" placeholder="Nueva clave" required>

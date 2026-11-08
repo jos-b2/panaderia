@@ -42,11 +42,11 @@ function confirmarSalida() {
 
     document.getElementById('btn-cancelar').addEventListener('click', () => modal.remove());
     document.getElementById('btn-aceptar').addEventListener('click', () => {
-        window.location.href = '../../../Controllers/LogoutController.php';
+        window.location.href = '/panaderia/Controllers/LogoutController.php';
     });
 }
 
-// Carga asíncrona de perfil.php
+// Carga asíncrona de la ventana de perfil (PerfilController)
 async function abrirPerfilModal() {
     const modal = document.getElementById('perfilModal');
     const container = document.getElementById('perfilModalContent');
@@ -59,7 +59,7 @@ async function abrirPerfilModal() {
         modal.classList.add('active');
         
         try {
-            const response = await fetch('../Public/perfil.php');
+            const response = await fetch('/panaderia/Controllers/PerfilController.php');
             if (response.ok) {
                 container.innerHTML = await response.text();
                 // Adjuntar el listener de guardado AJAX al formulario cargado dinámicamente
@@ -142,7 +142,7 @@ function inicializarFormularioPerfil() {
         submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Guardando...';
 
         try {
-            const response = await fetch('../../../Controllers/PerfilController.php', {
+            const response = await fetch('/panaderia/Controllers/PerfilController.php', {
                 method: 'POST',
                 body: formData
             });
