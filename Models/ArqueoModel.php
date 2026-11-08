@@ -55,7 +55,7 @@ class ArqueoModel {
 
     /** Piezas horneadas (tandas no anuladas) por producto en una fecha: [producto_id => piezas] */
     public function horneadasDe($fecha) {
-        $stmt = $this->pdo->prepare("SELECT producto_id, COALESCE(SUM(piezas), 0) FROM producciones WHERE fecha = ? AND anulada = 0 GROUP BY producto_id");
+        $stmt = $this->pdo->prepare("SELECT producto_id, COALESCE(SUM(piezas), 0) FROM producciones WHERE fecha = ? AND anulada = 0 AND estado = 'lista' GROUP BY producto_id");
         $stmt->execute([$fecha]);
         return $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
     }
@@ -77,14 +77,32 @@ class ArqueoModel {
         return $stmt->fetch() ?: ['caja_real' => '', 'nota' => ''];
     }
 
+    /** Piezas entregadas en pedidos en una fecha (salen del pan del día): [producto_id => piezas] */
+    public function entregadasDe($fecha) {
+        $stmt = $this->pdo->prepare("
+            SELECT pi.producto_id, SUM(pi.cantidad)
+            FROM pedido_items pi JOIN pedidos p ON p.id = pi.pedido_id
+            WHERE p.estado = 'entregado' AND DATE(p.entregado_en) = ?
+            GROUP BY pi.producto_id
+        ");
+        $stmt->execute([$fecha]);
+        return $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+    }
+
+    /** Dinero de pedidos recibido en una fecha (abonos y cobros al entregar). */
+    public function abonosDe($fecha) {
+        $stmt = $this->pdo->prepare("SELECT COALESCE(SUM(monto), 0) FROM abonos WHERE fecha = ?");
+        $stmt->execute([$fecha]);
+        return (float)$stmt->fetchColumn();
+    }
+
+    /** Historial: el esperado en caja = ventas de mostrador + abonos de pedidos de ese día. */
     public function historial($limite = 15) {
         $stmt = $this->pdo->prepare("
             SELECT ac.fecha, ac.caja_real, ac.nota,
-                   COALESCE(SUM(ad.vendidas * p.precio), 0) AS esperado
+                   COALESCE((SELECT SUM(ad.vendidas * p.precio) FROM arqueo_detalle ad JOIN productos p ON p.id = ad.producto_id WHERE ad.fecha = ac.fecha), 0)
+                 + COALESCE((SELECT SUM(a.monto) FROM abonos a WHERE a.fecha = ac.fecha), 0) AS esperado
             FROM arqueo_caja ac
-            LEFT JOIN arqueo_detalle ad ON ac.fecha = ad.fecha
-            LEFT JOIN productos p ON ad.producto_id = p.id
-            GROUP BY ac.fecha, ac.caja_real, ac.nota
             ORDER BY ac.fecha DESC
             LIMIT :limite
         ");

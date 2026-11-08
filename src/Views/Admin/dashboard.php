@@ -14,7 +14,7 @@ include_once __DIR__ . '/../Layouts/header.php';
 ?>
 
 <!-- Importación directa del CSS del Dashboard -->
-<link rel="stylesheet" href="/panaderia/Assets/css/dashboard.css?v=8">
+<link rel="stylesheet" href="/panaderia/Assets/css/dashboard.css?v=10">
 
 <script>
     document.body.className = 'dashboard-bg';
@@ -30,7 +30,13 @@ include_once __DIR__ . '/../Layouts/header.php';
     <div class="menu-actions">
         <!-- Usuario: abre la ventana de perfil (abrirPerfilModal) -->
         <button type="button" onclick="abrirPerfilModal()" class="menu-user" title="Ver perfil">
-            <i class="ph-duotone ph-user-circle"></i>
+            <span class="menu-user-foto">
+                <?php if ($fotoUsuario): ?>
+                    <img src="<?= htmlspecialchars($fotoUsuario) ?>?v=<?= @filemtime($_SERVER['DOCUMENT_ROOT'] . $fotoUsuario) ?>" alt="">
+                <?php else: ?>
+                    <span><?= htmlspecialchars(mb_strtoupper(mb_substr($nombreUsuario, 0, 1))) ?></span>
+                <?php endif; ?>
+            </span>
             <div class="menu-user-text lh-1">
                 <div class="menu-user-name fw-bold"><?php echo htmlspecialchars($nombreUsuario); ?></div>
                 <span class="menu-user-role"><?php echo htmlspecialchars($rolUsuario); ?></span>
@@ -104,7 +110,20 @@ include_once __DIR__ . '/../Layouts/header.php';
                         <i class="ph-duotone ph-fire"></i>
                     </div>
                     <div class="card-title">PRODUCCIÓN</div>
-                    <div class="card-desc">Registro de horneadas diarias</div>
+                    <div class="card-desc">Tandas por amasar</div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Hornear -->
+        <div class="menu-cell">
+            <a href="HornearController.php" class="menu-link">
+                <div class="card-menu-item">
+                    <div class="card-icon">
+                        <i class="ph-duotone ph-oven"></i>
+                    </div>
+                    <div class="card-title">HORNEAR</div>
+                    <div class="card-desc">Hornos, voltear y sacar</div>
                 </div>
             </a>
         </div>
@@ -185,6 +204,9 @@ include_once __DIR__ . '/../Layouts/header.php';
 </div>
 
 <!-- Archivo JS externo -->
-<script src="/panaderia/Assets/js/dashboard.js?v=3"></script>
+<!-- Recorte de la foto de perfil -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
+<script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
+<script src="/panaderia/Assets/js/dashboard.js?v=4"></script>
 
 <?php include_once __DIR__ . '/../Layouts/footer.php'; ?>

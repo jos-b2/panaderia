@@ -14,7 +14,7 @@ include_once __DIR__ . '/../Layouts/header.php';
 ?>
 
 <link rel="stylesheet" href="/panaderia/Assets/css/siderbar.css?v=4">
-<link rel="stylesheet" href="/panaderia/Assets/css/recetas.css?v=4">
+<link rel="stylesheet" href="/panaderia/Assets/css/recetas.css?v=5">
 
 <div class="d-flex">
     <?php include_once __DIR__ . '/../Layouts/sidebar.php'; ?>
@@ -85,6 +85,22 @@ include_once __DIR__ . '/../Layouts/header.php';
                         <div class="col-md-3">
                             <label class="form-label small fw-semibold">Rinde (piezas por base)</label>
                             <input type="number" step="0.01" min="0.01" name="rendimiento" class="form-control" value="<?= htmlspecialchars($productoEditar['rendimiento'] ?? '1.00') ?>" required>
+                        </div>
+                    </div>
+
+                    <!-- Tiempos de horno (los usa la vista Hornear para avisar cuándo voltear y sacar) -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm-6 col-md-3">
+                            <label class="form-label small fw-semibold">Minutos de horneado</label>
+                            <input type="number" min="1" name="minutos_horneado" class="form-control" value="<?= (int)($productoEditar['minutos_horneado'] ?? 20) ?>" required>
+                        </div>
+                        <div class="col-sm-6 col-md-3">
+                            <label class="form-label small fw-semibold">Voltear al minuto <span class="text-lowercase">(opcional)</span></label>
+                            <input type="number" min="1" name="minutos_volteo" class="form-control" placeholder="No se voltea"
+                                   value="<?= isset($productoEditar['minutos_volteo']) && $productoEditar['minutos_volteo'] !== null ? (int)$productoEditar['minutos_volteo'] : '' ?>">
+                        </div>
+                        <div class="col-md-6 d-flex align-items-end">
+                            <small class="text-muted"><i class="ph-duotone ph-oven me-1"></i>En Hornear, el temporizador avisa al minuto de volteo y al terminar el horneado.</small>
                         </div>
                     </div>
 
@@ -200,6 +216,10 @@ include_once __DIR__ . '/../Layouts/header.php';
                             Por cada <strong><?= $baseTxt ?></strong> se hornean
                             <strong><?= $cant($rend) ?> piezas</strong>, con un costo aproximado de
                             <strong>$<?= number_format($costoPieza, 2) ?></strong> por pieza.
+                        </p>
+                        <p class="recipe-horno">
+                            <i class="ph-duotone ph-oven"></i>Horno: <strong><?= (int)$p['minutos_horneado'] ?> min</strong>
+                            <?= $p['minutos_volteo'] !== null ? '· voltear a los ' . (int)$p['minutos_volteo'] . ' min' : '· sin volteo' ?>
                         </p>
 
                         <!-- Ficha técnica -->

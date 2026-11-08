@@ -20,11 +20,12 @@ $proximos     = $panelModel->getProximosPedidos(6);
 // Datos de la gráfica de los últimos 7 días (en piezas: horneadas vs. vendidas en el arqueo)
 $prodSemana       = $panelModel->getProduccionSemana();
 $ventArqueoSemana = $panelModel->getVentasArqueoSemana();
+$entregadasSemana = $panelModel->getEntregadasSemana();   // pedidos entregados (también son ventas)
 
 // Una fila por día para la gráfica de Chart.js (panel.js)
 $dias_es = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 $chartDias = [];
-$hayDatosSemana = !empty($ventArqueoSemana) || !empty($prodSemana);
+$hayDatosSemana = !empty($ventArqueoSemana) || !empty($prodSemana) || !empty($entregadasSemana);
 
 for ($i = 6; $i >= 0; $i--) {
     $ts = strtotime("-{$i} days");
@@ -33,7 +34,7 @@ for ($i = 6; $i >= 0; $i--) {
     $chartDias[] = [
         'label'     => $dias_es[(int)date('w', $ts)] . ' ' . date('j', $ts),
         'horneadas' => (int)($prodSemana[$fechaStr] ?? 0),
-        'vendidas'  => (int)($ventArqueoSemana[$fechaStr] ?? 0),
+        'vendidas'  => (int)($ventArqueoSemana[$fechaStr] ?? 0) + (int)($entregadasSemana[$fechaStr] ?? 0),
     ];
 }
 

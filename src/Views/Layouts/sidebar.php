@@ -40,6 +40,7 @@ $menu_principal = [
     ['insumos',    'InsumosController.php',    'ph-package',        'Materia prima'],
     ['recetas',    'RecetasController.php',    'ph-book-open-text', 'Recetas'],
     ['produccion', 'ProduccionController.php', 'ph-fire',           'Producción'],
+    ['hornear',    'HornearController.php',    'ph-oven',           'Hornear'],
     ['pedidos',    'PedidosController.php',    'ph-clipboard-text', 'Pedidos'],
     ['arqueo',     'ArqueoController.php',     'ph-cash-register',  'Arqueo diario'],
     ['reportes',   'ReportesController.php',   'ph-chart-line-up',  'Reportes'],

@@ -39,3 +39,189 @@
 @media (max-width: 420px) {
     .ped-select, .ped-search-group .ped-input, .ped-btn-search { width: 100% !important; flex: 1 1 100%; }
 }
+
+/* ==========================================================================
+   Líneas de producto del nuevo pedido
+   ========================================================================== */
+.ped-items {
+    padding: 14px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+}
+
+.ped-items-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#listaItems { display: flex; flex-direction: column; gap: 8px; }
+
+.ped-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 120px 90px auto;
+    gap: 8px;
+    align-items: center;
+}
+
+.ped-item-subtotal {
+    text-align: right;
+    font-family: var(--font-head);
+    font-weight: 700;
+    color: var(--ink);
+    font-variant-numeric: lining-nums;
+    font-feature-settings: "lnum" 1;
+}
+
+/* ==========================================================================
+   Card: pan disponible hoy
+   ========================================================================== */
+.ped-pan { border-top: 3px solid var(--accent) !important; }
+
+.ped-pan-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+
+.ped-pan-head .ped-card-title { padding-left: 14px; }
+
+.ped-pan-tabla td, .ped-pan-tabla th { font-variant-numeric: lining-nums tabular-nums; }
+
+.ped-vender {
+    display: inline-block;
+    min-width: 46px;
+    padding: 3px 9px;
+    background: #E7EFE4;
+    color: var(--success);
+    font-weight: 700;
+}
+
+.ped-faltan {
+    display: inline-block;
+    padding: 3px 9px;
+    background: var(--danger);
+    color: #FFFFFF;
+    font-weight: 700;
+    font-size: 12.5px;
+}
+
+.ped-encargos {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--line);
+}
+
+.ped-encargos h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-head);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 10px;
+}
+
+.ped-encargos h4 i { font-size: 18px; color: var(--accent-dk); }
+
+.ped-encargos ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+
+.ped-encargos li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: #FFFFFF;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--success);
+}
+
+.ped-encargos li.is-falta { border-left-color: var(--danger); background: #FDF6F4; }
+.ped-encargos li > div { flex: 1; min-width: 0; }
+.ped-encargos li strong { display: block; font-size: 14px; color: var(--ink); }
+.ped-encargos li small { font-size: 12.5px; color: var(--muted); }
+
+.ped-hora {
+    flex-shrink: 0;
+    min-width: 70px;
+    padding: 4px 6px;
+    text-align: center;
+    background: var(--ink);
+    color: #FEFAE0;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.ped-encargos li.is-falta .ped-hora { background: var(--danger); }
+
+.ped-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 9px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.ped-chip i { font-size: 15px; }
+.ped-chip.is-ok { background: #E7EFE4; color: var(--success); }
+.ped-chip.is-falta { background: #F7E6E2; color: var(--danger); white-space: normal; }
+
+@media (max-width: 575.98px) {
+    .ped-item { grid-template-columns: minmax(0, 1fr) 90px; }
+    .ped-item-subtotal { text-align: left; }
+    .ped-encargos li { flex-wrap: wrap; }
+}
+
+/* ==========================================================================
+   Card: ventas de hoy por encargo
+   ========================================================================== */
+.ped-ventas { border-top: 3px solid var(--success) !important; }
+
+.ped-ventas-total {
+    padding: 5px 10px;
+    background: #E7EFE4;
+    color: var(--success);
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 15px;
+    white-space: nowrap;
+    font-variant-numeric: lining-nums;
+    font-feature-settings: "lnum" 1;
+}
+
+.ped-ventas-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+
+.ped-ventas-lista li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: #FFFFFF;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--success);
+}
+
+.ped-ventas-lista li > div { flex: 1; min-width: 0; }
+.ped-ventas-lista li strong { display: block; font-size: 14px; color: var(--ink); }
+.ped-ventas-lista li small { font-size: 12.5px; color: var(--muted); }
+.ped-ventas-lista .ped-hora { background: var(--success); }
+
+.ped-ventas-monto {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--ink);
+    font-variant-numeric: lining-nums;
+    font-feature-settings: "lnum" 1;
+}
+
+@media (max-width: 575.98px) {
+    .ped-ventas-lista li { flex-wrap: wrap; }
+}

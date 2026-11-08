@@ -12,7 +12,7 @@ class PanelModel {
     }
 
     public function getHorneadasHoy() {
-        return (int)$this->pdo->query("SELECT COALESCE(SUM(piezas), 0) FROM producciones WHERE fecha = CURDATE() AND anulada = 0")->fetchColumn();
+        return (int)$this->pdo->query("SELECT COALESCE(SUM(piezas), 0) FROM producciones WHERE fecha = CURDATE() AND anulada = 0 AND estado = 'lista'")->fetchColumn();
     }
 
     public function getVentasArqueoHoy() {
@@ -48,11 +48,16 @@ class PanelModel {
 
     /** Piezas horneadas por fecha en los últimos 7 días: [fecha => total] */
     public function getProduccionSemana() {
-        return $this->pdo->query("SELECT fecha, COALESCE(SUM(piezas), 0) AS total FROM producciones WHERE fecha >= DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND anulada = 0 GROUP BY fecha")->fetchAll(PDO::FETCH_KEY_PAIR);
+        return $this->pdo->query("SELECT fecha, COALESCE(SUM(piezas), 0) AS total FROM producciones WHERE fecha >= DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND anulada = 0 AND estado = 'lista' GROUP BY fecha")->fetchAll(PDO::FETCH_KEY_PAIR);
     }
 
     /** Piezas vendidas en el arqueo por fecha en los últimos 7 días: [fecha => total] */
     public function getVentasArqueoSemana() {
         return $this->pdo->query("SELECT fecha, COALESCE(SUM(vendidas), 0) AS total FROM arqueo_detalle WHERE fecha >= DATE_SUB(CURDATE(), INTERVAL 6 DAY) GROUP BY fecha")->fetchAll(PDO::FETCH_KEY_PAIR);
+    }
+
+    /** Piezas de pedidos entregados por fecha en los últimos 7 días: [fecha => total] */
+    public function getEntregadasSemana() {
+        return $this->pdo->query("SELECT DATE(p.entregado_en) AS fecha, SUM(pi.cantidad) AS total FROM pedidos p JOIN pedido_items pi ON pi.pedido_id = p.id WHERE p.estado = 'entregado' AND p.entregado_en >= CURDATE() - INTERVAL 6 DAY GROUP BY DATE(p.entregado_en)")->fetchAll(PDO::FETCH_KEY_PAIR);
     }
 }

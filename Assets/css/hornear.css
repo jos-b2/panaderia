@@ -1,0 +1,571 @@
+/* ==========================================================================
+   HORNEAR - PANADERÍA DON LEO
+   Ubicación: /panaderia/Assets/css/hornear.css
+   Hornos con animación en pixel art (movimientos con steps() para el efecto
+   "a saltos" de 8 bits), cola de masa y avisos.
+   ========================================================================== */
+
+.pixel-text {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    line-height: 1.4;
+    letter-spacing: 0;
+}
+
+/* ---------- Colores del pan pixelado según el avance ---------- */
+.pan-pixel {
+    display: block;
+    width: 72px;
+    height: 36px;
+    image-rendering: pixelated;
+    overflow: visible;
+    /* dorando (por defecto) */
+    --px-o: #6B3F1D; --px-c: #E0A24F; --px-h: #F3C983; --px-s: #A8642A; --px-C: #C9853A;
+}
+.pan-pixel.pan-crudo   { --px-o: #8A6A48; --px-c: #F1DCB4; --px-h: #FBEFD6; --px-s: #D9BD8F; --px-C: #E6CB9A; }
+.pan-pixel.pan-dorando { --px-o: #6B3F1D; --px-c: #E0A24F; --px-h: #F3C983; --px-s: #A8642A; --px-C: #C9853A; }
+.pan-pixel.pan-listo   { --px-o: #4A2510; --px-c: #C27A2C; --px-h: #E6A85A; --px-s: #7A3F12; --px-C: #9C5A1E; }
+
+/* ---------- Avisos superiores ---------- */
+.hor-avisos { display: flex; flex-direction: column; gap: 12px; }
+
+.hor-aviso-pocos {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: #FFF6E5;
+    border: 3px solid var(--accent);
+    box-shadow: 4px 4px 0 rgba(36, 23, 15, 0.18);
+    animation: avisoLatido 1.2s steps(2) infinite;
+}
+
+.hor-aviso-pocos.is-final { background: #F7E6E2; border-color: var(--danger); }
+.hor-aviso-pocos[hidden] { display: none; }
+
+.hor-aviso-icono {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent);
+    color: #FFFFFF;
+    font-size: 22px;
+}
+
+.hor-aviso-pocos.is-final .hor-aviso-icono { background: var(--danger); }
+.hor-aviso-pocos strong { display: block; font-size: 15px; color: var(--ink); }
+.hor-aviso-pocos small { color: var(--ink-soft); font-size: 13px; }
+
+@keyframes avisoLatido {
+    0%   { box-shadow: 4px 4px 0 rgba(36, 23, 15, 0.18); }
+    100% { box-shadow: 6px 6px 0 rgba(192, 138, 62, 0.45); }
+}
+
+.hor-config-avisos {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.hor-config-avisos label { margin: 0; }
+.hor-config-avisos input { width: 70px; text-align: center; }
+.hor-config-avisos .btn:first-of-type { margin-left: auto; }
+
+/* ---------- Distribución ---------- */
+.hor-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: 22px;
+    align-items: start;
+}
+
+.hor-hornos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: 20px;
+}
+
+.hor-aside { position: sticky; top: 24px; }
+
+.hor-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    padding: 20px 22px;
+}
+
+.hor-card-title {
+    font-family: var(--font-head);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+}
+
+/* ---------- Horno ---------- */
+.hor-horno {
+    display: flex;
+    flex-direction: column;
+    background: #2E1D13;
+    border: 4px solid #1B110B;
+    box-shadow: 6px 6px 0 rgba(36, 23, 15, 0.25);
+    color: #F3E4CF;
+    animation: entrarEscala .45s cubic-bezier(.2, .7, .2, 1) backwards;
+}
+
+.hor-horno.tiene-listo   { border-color: #6BAF5B; box-shadow: 6px 6px 0 rgba(63, 112, 70, 0.4); }
+.hor-horno.tiene-voltear { border-color: #E8C089; box-shadow: 6px 6px 0 rgba(192, 138, 62, 0.45); }
+
+.hor-horno-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px 10px;
+}
+
+.hor-horno-icono {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #C08A3E;
+    color: #24170F;
+    font-size: 21px;
+}
+
+.hor-horno.is-vacio .hor-horno-icono { background: #6B5A4C; }
+
+.hor-horno-nombre { flex: 1; min-width: 0; }
+.hor-horno-nombre h3 { font-family: var(--font-head); font-size: 18px; font-weight: 700; color: #FFFFFF; margin: 0; }
+.hor-horno-nombre small { font-size: 12px; color: #C9A77D; }
+
+.hor-horno-estado {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 6px 7px;
+    background: #C0392B;
+    color: #FFFFFF;
+}
+
+.hor-horno.is-vacio .hor-horno-estado { background: #5A4A3E; color: #CDBBA7; }
+
+/* Barra de capacidad en bloques */
+.hor-capacidad {
+    margin: 0 16px 12px;
+    height: 10px;
+    background: #1B110B;
+    border: 2px solid #1B110B;
+}
+
+.hor-capacidad i {
+    display: block;
+    height: 100%;
+    background: repeating-linear-gradient(90deg, #E8C089 0 8px, #C08A3E 8px 10px);
+}
+
+/* Cámara: interior del horno */
+.hor-camara {
+    position: relative;
+    margin: 0 16px;
+    min-height: 170px;
+    padding: 12px 12px 34px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background:
+        radial-gradient(120% 90% at 50% 110%, rgba(255, 140, 40, 0.55), transparent 65%),
+        #3A2415;
+    border: 4px solid #1B110B;
+    box-shadow: inset 0 0 0 2px #5A3A24;
+    overflow: hidden;
+}
+
+.hor-horno.is-vacio .hor-camara { background: #2A1C13; }
+
+.hor-camara-vacia {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #7E6A58;
+    padding: 30px 0;
+}
+
+/* Llamas pixeladas */
+.hor-llamas {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 22px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    padding: 0 6px;
+}
+
+.hor-llamas i {
+    width: 8%;
+    height: 10px;
+    background: #E8C089;
+    box-shadow: 0 -6px 0 #F08A24, 0 4px 0 #C0392B;
+    animation: llama 0.5s steps(2) infinite alternate;
+}
+
+.hor-llamas i:nth-child(odd)  { animation-duration: .4s; }
+.hor-llamas i:nth-child(3n)   { animation-delay: .15s; }
+.hor-llamas i:nth-child(4n)   { animation-duration: .6s; animation-delay: .3s; }
+
+@keyframes llama {
+    from { height: 6px;  background: #F08A24; }
+    to   { height: 14px; background: #FFD36A; }
+}
+
+.hor-horno.is-vacio .hor-llamas i {
+    height: 4px;
+    background: #4A3A2E;
+    box-shadow: none;
+    animation: none;
+}
+
+/* ---------- Carga (pan dentro del horno) ---------- */
+.hor-carga {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 84px minmax(0, 1fr);
+    gap: 4px 12px;
+    padding: 10px;
+    background: rgba(20, 12, 7, 0.55);
+    border: 2px solid rgba(232, 192, 137, 0.25);
+}
+
+.hor-carga.is-voltear { border-color: #E8C089; background: rgba(192, 138, 62, 0.22); }
+.hor-carga.is-listo   { border-color: #8FD07E; background: rgba(63, 112, 70, 0.35); }
+
+.hor-carga-sprite {
+    position: relative;
+    grid-row: span 2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    min-height: 64px;
+    padding-bottom: 4px;
+}
+
+.hor-carga-etiqueta {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 8px;
+    color: #FFFFFF;
+    text-shadow: 2px 2px 0 #1B110B;
+}
+
+.hor-carga.is-voltear .hor-carga-etiqueta { color: #FFD36A; animation: parpadeo .6s steps(2) infinite; }
+.hor-carga.is-listo   .hor-carga-etiqueta { color: #A8F08F; animation: parpadeo .5s steps(2) infinite; }
+
+@keyframes parpadeo { 50% { opacity: 0; } }
+
+/* Movimientos del pan (a saltos, estilo 8 bits) */
+.hor-carga.is-horneando .pan-pixel { animation: panRespira 1.4s steps(2) infinite; }
+.hor-carga.is-voltear   .pan-pixel { animation: panVoltea 0.9s steps(4) infinite; }
+.hor-carga.is-listo     .pan-pixel { animation: panSalta 0.7s steps(3) infinite; }
+
+@keyframes panRespira {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-2px); }
+}
+
+@keyframes panVoltea {
+    0%   { transform: translateY(0) scaleY(1); }
+    25%  { transform: translateY(-10px) scaleY(0.4); }
+    50%  { transform: translateY(-14px) scaleY(-1); }
+    75%  { transform: translateY(-10px) scaleY(-0.4); }
+    100% { transform: translateY(0) scaleY(1); }
+}
+
+@keyframes panSalta {
+    0%, 100% { transform: translateY(0); }
+    33%      { transform: translateY(-9px); }
+    66%      { transform: translateY(-4px); }
+}
+
+/* Chispas (listo) y vapor (horneando / listo) */
+.hor-chispas, .hor-vapor { position: absolute; inset: 0; pointer-events: none; }
+
+.hor-chispas i {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: #FFF3B0;
+    box-shadow: 0 0 0 1px #E8C089;
+    opacity: 0;
+}
+
+.hor-chispas i:nth-child(1) { left: 4px;  top: 18px; }
+.hor-chispas i:nth-child(2) { right: 4px; top: 12px; }
+.hor-chispas i:nth-child(3) { left: 16px; top: 2px; }
+.hor-chispas i:nth-child(4) { right: 14px; top: 30px; }
+
+.hor-carga.is-listo .hor-chispas i { animation: chispa .8s steps(2) infinite; }
+.hor-carga.is-listo .hor-chispas i:nth-child(2) { animation-delay: .2s; }
+.hor-carga.is-listo .hor-chispas i:nth-child(3) { animation-delay: .4s; }
+.hor-carga.is-listo .hor-chispas i:nth-child(4) { animation-delay: .6s; }
+
+@keyframes chispa {
+    0%   { opacity: 1; transform: scale(1); }
+    50%  { opacity: 1; transform: scale(1.6); }
+    100% { opacity: 0; transform: scale(0.6); }
+}
+
+.hor-vapor i {
+    position: absolute;
+    bottom: 26px;
+    width: 6px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.55);
+    opacity: 0;
+}
+
+.hor-vapor i:nth-child(1) { left: 26px; }
+.hor-vapor i:nth-child(2) { left: 38px; }
+.hor-vapor i:nth-child(3) { left: 50px; }
+
+.hor-carga.is-horneando .hor-vapor i,
+.hor-carga.is-listo .hor-vapor i { animation: vapor 1.6s steps(4) infinite; }
+.hor-carga.is-horneando .hor-vapor i { background: rgba(255, 255, 255, 0.25); }
+.hor-vapor i:nth-child(2) { animation-delay: .5s !important; }
+.hor-vapor i:nth-child(3) { animation-delay: 1s !important; }
+
+@keyframes vapor {
+    0%   { opacity: 0;   transform: translateY(0); }
+    25%  { opacity: 1;   transform: translateY(-8px); }
+    100% { opacity: 0;   transform: translateY(-32px); }
+}
+
+/* Información de la carga */
+.hor-carga-info strong { display: block; font-size: 14px; color: #FFFFFF; }
+.hor-carga-info strong span { color: #E8C089; font-weight: 600; }
+
+.hor-carga-tiempo { display: flex; align-items: baseline; gap: 8px; margin: 6px 0; }
+.hor-carga-tiempo .pixel-text { font-size: 13px; color: #FFD36A; }
+.hor-carga.is-listo .hor-carga-tiempo .pixel-text { color: #A8F08F; }
+.hor-carga-tiempo small { font-size: 12px; color: #C9A77D; }
+
+.hor-progreso {
+    position: relative;
+    height: 10px;
+    background: #1B110B;
+    border: 2px solid #1B110B;
+}
+
+.hor-progreso i {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: repeating-linear-gradient(90deg, #FFD36A 0 6px, #F08A24 6px 8px);
+}
+
+.hor-carga.is-listo .hor-progreso i { background: repeating-linear-gradient(90deg, #A8F08F 0 6px, #6BAF5B 6px 8px); }
+
+.hor-marca-volteo {
+    position: absolute;
+    top: -6px;
+    bottom: -6px;
+    width: 3px;
+    background: #FFFFFF;
+    transform: translateX(-1px);
+}
+
+.hor-carga-acciones {
+    grid-column: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.hor-carga-acciones .btn { padding: 5px 10px !important; font-size: 12px !important; }
+.hor-carga-acciones .btn-outline-secondary { color: #F3E4CF !important; border-color: rgba(232, 192, 137, 0.4) !important; }
+.hor-carga-acciones .btn-outline-secondary:hover { background: rgba(232, 192, 137, 0.15) !important; }
+.hor-carga-acciones .btn-brand { background: #C08A3E !important; border-color: #C08A3E !important; color: #24170F !important; }
+
+.hor-carga-acciones .btn.is-ahora {
+    animation: botonAhora .5s steps(2) infinite;
+    border-color: #FFFFFF !important;
+}
+
+.hor-carga-acciones .btn-brand.is-ahora { background: #6BAF5B !important; border-color: #A8F08F !important; color: #10200C !important; }
+
+@keyframes botonAhora { 50% { transform: translateY(-2px); } }
+
+.hor-volteada { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: #A8F08F; }
+
+/* Pie del horno: cuándo se puede apagar */
+.hor-horno-pie {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 16px 14px;
+    font-size: 12.5px;
+    color: #C9A77D;
+}
+
+.hor-horno-pie[hidden] { display: none; }
+.hor-horno-pie i { font-size: 16px; }
+.hor-horno-pie.is-ultima { color: #FFD36A; }
+.hor-horno-pie.is-apagar { color: #A8F08F; }
+.hor-horno-pie:empty { margin-bottom: 4px; }
+
+/* ---------- Cola: listas para hornear ---------- */
+.hor-cola-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
+
+.hor-total {
+    padding: 4px 9px;
+    background: var(--accent-lt);
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--ink);
+}
+
+.hor-cola { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+
+.hor-masa {
+    padding: 12px;
+    background: #FFFFFF;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+}
+
+.hor-masa-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.hor-masa-top .pan-pixel { width: 48px; height: 24px; flex-shrink: 0; }
+.hor-masa-top > div { flex: 1; min-width: 0; }
+.hor-masa-top strong { display: block; font-size: 14px; color: var(--ink); }
+.hor-masa-top small { font-size: 11.5px; color: var(--muted); line-height: 1.4; }
+
+.hor-masa-piezas { text-align: right; flex-shrink: 0; }
+.hor-masa-piezas strong { font-family: var(--font-head); font-size: 22px; color: var(--accent-dk); line-height: 1; }
+.hor-masa-piezas small { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+.hor-meter { display: grid; grid-template-columns: minmax(0, 1fr) 70px auto; gap: 6px; }
+.hor-meter .form-control { text-align: center; }
+
+.hor-listas-hoy {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 16px 0 0;
+    padding-top: 14px;
+    border-top: 1px dashed var(--line);
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.hor-listas-hoy i { font-size: 18px; color: var(--success); }
+
+/* ---------- Configurar hornos ---------- */
+.hor-config { padding: 0; }
+
+.hor-config summary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 22px;
+    font-family: var(--font-head);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+    list-style: none;
+}
+
+.hor-config summary::-webkit-details-marker { display: none; }
+.hor-config summary i { font-size: 20px; color: var(--accent-dk); }
+.hor-config summary small { font-family: var(--font-body); font-size: 12px; color: var(--muted); font-weight: 500; }
+.hor-config summary::after { content: "+"; margin-left: auto; font-size: 20px; color: var(--muted); }
+.hor-config[open] summary::after { content: "−"; }
+
+.hor-config-body { padding: 0 22px 20px; display: flex; flex-direction: column; gap: 10px; }
+
+.hor-config-fila { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.hor-config-fila.is-inactivo { opacity: 0.55; }
+.hor-config-form { display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap; margin: 0; }
+.hor-config-form > input[type="text"], .hor-config-nuevo > input[type="text"] { flex: 1; min-width: 160px; }
+.hor-config-nuevo { padding-top: 12px; border-top: 1px dashed var(--line); margin: 0; }
+
+.hor-cap-input { position: relative; width: 130px; }
+.hor-cap-input input { padding-right: 42px !important; }
+.hor-cap-input span { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 12px; color: var(--muted); }
+
+/* ---------- Avisos flotantes en pixel art ---------- */
+.hor-toasts {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 3500;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: min(360px, calc(100vw - 36px));
+}
+
+.hor-toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #2E1D13;
+    color: #F3E4CF;
+    border: 3px solid #E8C089;
+    box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.35);
+    cursor: pointer;
+    animation: toastEntra .35s steps(3) both;
+}
+
+.hor-toast.is-listo { border-color: #8FD07E; }
+.hor-toast.is-pocos { border-color: #E57A5F; }
+.hor-toast .pixel-text { font-size: 9px; color: #FFD36A; white-space: nowrap; }
+.hor-toast.is-listo .pixel-text { color: #A8F08F; }
+.hor-toast.is-pocos .pixel-text { color: #FFB199; }
+.hor-toast strong { display: block; font-size: 13.5px; color: #FFFFFF; }
+.hor-toast small { font-size: 12px; color: #C9A77D; }
+.hor-toast.is-saliendo { animation: toastSale .35s steps(3) both; }
+
+@keyframes toastEntra { from { transform: translateX(110%); } to { transform: translateX(0); } }
+@keyframes toastSale  { from { transform: translateX(0); opacity: 1; } to { transform: translateX(110%); opacity: 0; } }
+
+/* ---------- Movimiento reducido ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .hor-carga .pan-pixel, .hor-llamas i, .hor-chispas i, .hor-vapor i,
+    .hor-aviso-pocos, .hor-carga-etiqueta, .hor-carga-acciones .btn { animation: none !important; }
+}
+
+/* ---------- Pantallas medianas y pequeñas ---------- */
+@media (max-width: 1199.98px) {
+    .hor-layout { grid-template-columns: 1fr; }
+    .hor-aside { position: static; }
+}
+
+@media (max-width: 575.98px) {
+    .hor-hornos { grid-template-columns: 1fr; }
+    .hor-config-avisos .btn:first-of-type { margin-left: 0; }
+    .hor-config-avisos .btn { flex: 1; }
+    .hor-carga { grid-template-columns: 70px minmax(0, 1fr); }
+    .pan-pixel { width: 60px; height: 30px; }
+    .hor-carga-acciones { grid-column: 1 / -1; }
+    .hor-carga-acciones form, .hor-carga-acciones .btn { flex: 1; }
+    .hor-meter { grid-template-columns: 1fr 70px; }
+    .hor-meter .btn { grid-column: 1 / -1; }
+}

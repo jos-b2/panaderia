@@ -62,7 +62,8 @@ include_once __DIR__ . '/../Layouts/header.php';
                                     <th>Producto</th>
                                     <th class="text-center">Sobrante ayer</th>
                                     <th class="text-center">Horneadas hoy</th>
-                                    <th class="text-center">Vendidas</th>
+                                    <th class="text-center">En pedidos</th>
+                                    <th class="text-center">Vendidas (mostrador)</th>
                                     <th class="text-center">Sobrante hoy (contado)</th>
                                     <th class="text-center">Diferencia</th>
                                     <th class="text-end">Valor</th>
@@ -71,7 +72,7 @@ include_once __DIR__ . '/../Layouts/header.php';
                             <tbody>
                                 <?php if (empty($productos)): ?>
                                     <tr>
-                                        <td colspan="7" class="text-center text-muted py-4">No hay productos activos en la base de datos.</td>
+                                        <td colspan="8" class="text-center text-muted py-4">No hay productos activos en la base de datos.</td>
                                     </tr>
                                 <?php else: ?>
                                     <?php foreach ($productos as $p): ?>
@@ -80,18 +81,20 @@ include_once __DIR__ . '/../Layouts/header.php';
                                             $precio = (float)$p['precio'];
                                             $ayer = (int)($sobranteAyer[$pid] ?? 0);
                                             $horn = (int)($horneadasHoy[$pid] ?? 0);
+                                            $entr = (int)($entregadasHoy[$pid] ?? 0);
                                             $vend = (int)($detalleHoy[$pid]['vendidas'] ?? 0);
                                             $sobr = (int)($detalleHoy[$pid]['sobrante'] ?? 0);
-                                            $dif = $ayer + $horn - $vend - $sobr;
+                                            $dif = $ayer + $horn - $entr - $vend - $sobr;
                                             $val = $vend * $precio;
                                         ?>
-                                        <tr class="arq-row" data-precio="<?= $precio ?>" data-ayer="<?= $ayer ?>" data-horn="<?= $horn ?>">
+                                        <tr class="arq-row" data-precio="<?= $precio ?>" data-ayer="<?= $ayer ?>" data-horn="<?= $horn ?>" data-entr="<?= $entr ?>">
                                             <td>
                                                 <strong style="display: block;"><?= htmlspecialchars($p['nombre']) ?></strong>
                                                 <span class="text-muted">$<?= number_format($precio, 2) ?> c/u</span>
                                             </td>
                                             <td class="text-center"><?= $ayer ?></td>
                                             <td class="text-center"><?= $horn ?></td>
+                                            <td class="text-center" title="Piezas de pedidos entregados este día"><?= $entr > 0 ? $entr : '—' ?></td>
                                             <td class="text-center">
                                                 <input type="number" min="0" name="vendidas[<?= $pid ?>]" class="form-control arq-table-input mx-auto js-arq-vend" value="<?= $vend ?>">
                                             </td>
@@ -108,7 +111,7 @@ include_once __DIR__ . '/../Layouts/header.php';
                     </div>
 
                     <div class="text-muted">
-                        Diferencia = sobrante de ayer + horneadas – vendidas – sobrante contado. Positiva: pan que no aparece (merma o faltante). Negativa: excedente (revise si faltó anotar una tanda).
+                        Diferencia = sobrante de ayer + horneadas – entregadas en pedidos – vendidas en mostrador – sobrante contado. Las piezas de pedidos entregados se suman solas. Positiva: pan que no aparece (merma o faltante). Negativa: excedente (revise si faltó anotar una tanda).
                     </div>
                 </div>
             </div>
@@ -119,9 +122,9 @@ include_once __DIR__ . '/../Layouts/header.php';
                     
                     <div class="arq-summary-grid mb-4">
                         <div class="arq-sub-card">
-                            <span class="arq-sub-label"><i class="ph-duotone ph-coins"></i>Ingreso esperado</span>
-                            <strong class="arq-sub-val" id="resEsperado">$0.00</strong>
-                            <span class="arq-sub-desc">vendidas × precio</span>
+                            <span class="arq-sub-label"><i class="ph-duotone ph-coins"></i>Esperado en caja</span>
+                            <strong class="arq-sub-val" id="resEsperado" data-abonos="<?= number_format($abonosHoy, 2, '.', '') ?>">$0.00</strong>
+                            <span class="arq-sub-desc">mostrador <span id="resMostrador">$0.00</span> + pedidos $<?= number_format($abonosHoy, 2) ?></span>
                         </div>
                         <div class="arq-sub-card arq-sub-warning">
                             <span class="arq-sub-label"><i class="ph-duotone ph-trend-down"></i>Valor de la diferencia</span>
@@ -195,4 +198,4 @@ include_once __DIR__ . '/../Layouts/header.php';
     </div>
 </div>
 
-<script src="/panaderia/Assets/js/arqueo.js"></script>
+<script src="/panaderia/Assets/js/arqueo.js?v=2"></script>

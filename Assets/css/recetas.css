@@ -428,3 +428,16 @@
     .recipe-facts dt { letter-spacing: 0.1em; }
     .recipe-actions .btn { flex: 1; }
 }
+
+/* Tiempos de horno en la ficha de la receta */
+.recipe-horno {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: -8px 0 0;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.recipe-horno i { font-size: 17px; color: var(--accent-dk); }
+.recipe-horno strong { color: var(--ink); }

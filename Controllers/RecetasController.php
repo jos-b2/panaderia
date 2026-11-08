@@ -30,16 +30,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $precio = (float)($_POST['precio'] ?? 0);
     $base_insumo_id = (int)($_POST['base_insumo_id'] ?? 0);
     $rendimiento = (float)($_POST['rendimiento'] ?? 1);
+    // Tiempos de horno: minutos de horneado (mín. 1) y minuto de volteo (vacío = no se voltea)
+    $minutos_horneado = max(1, (int)($_POST['minutos_horneado'] ?? 20));
+    $minutos_volteo = (isset($_POST['minutos_volteo']) && $_POST['minutos_volteo'] !== '') ? (int)$_POST['minutos_volteo'] : null;
+    if ($minutos_volteo !== null && ($minutos_volteo <= 0 || $minutos_volteo >= $minutos_horneado)) {
+        $minutos_volteo = null;   // un volteo fuera del tiempo de horneado no tiene sentido
+    }
     $ing_ids = $_POST['ing_id'] ?? [];
     $ing_cants = $_POST['ing_cant'] ?? [];
 
     if ($nombre !== '' && $base_insumo_id > 0 && $rendimiento > 0) {
         try {
             if ($accion === 'crear') {
-                $productoModel->crear($nombre, $precio, $base_insumo_id, $rendimiento, $ing_ids, $ing_cants);
+                $productoModel->crear($nombre, $precio, $base_insumo_id, $rendimiento, $minutos_horneado, $minutos_volteo, $ing_ids, $ing_cants);
             } elseif ($accion === 'editar') {
                 $producto_id = (int)($_POST['id'] ?? 0);
-                $productoModel->actualizar($producto_id, $nombre, $precio, $base_insumo_id, $rendimiento, $ing_ids, $ing_cants);
+                $productoModel->actualizar($producto_id, $nombre, $precio, $base_insumo_id, $rendimiento, $minutos_horneado, $minutos_volteo, $ing_ids, $ing_cants);
             }
 
             header("Location: RecetasController.php?ok=" . ($accion === 'editar' ? 'editado' : 'creado'));

@@ -35,10 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const precio = parseFloat(row.dataset.precio) || 0;
             const ayer = parseInt(row.dataset.ayer, 10) || 0;
             const horn = parseInt(row.dataset.horn, 10) || 0;
+            const entr = parseInt(row.dataset.entr, 10) || 0;   // piezas entregadas en pedidos
             const vend = parseInt(row.querySelector('.js-arq-vend').value, 10) || 0;
             const sobr = parseInt(row.querySelector('.js-arq-sobr').value, 10) || 0;
 
-            const dif = ayer + horn - vend - sobr;
+            const dif = ayer + horn - entr - vend - sobr;
             const val = vend * precio;
 
             row.querySelector('.js-arq-dif').textContent = dif;
@@ -48,6 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
             totalDifValor += dif * precio;
         });
 
+        // Esperado en caja = ventas de mostrador + dinero de pedidos recibido ese día
+        const resMostrador = document.getElementById('resMostrador');
+        if (resMostrador) resMostrador.textContent = `$${totalEsperado.toFixed(2)}`;
+        totalEsperado += resEsperado ? (parseFloat(resEsperado.dataset.abonos) || 0) : 0;
         if (resEsperado) resEsperado.textContent = `$${totalEsperado.toFixed(2)}`;
         if (resDiferencia) resDiferencia.textContent = `$${totalDifValor.toFixed(2)}`;
 

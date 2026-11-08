@@ -44,6 +44,8 @@ $sobranteAyer  = $arqueoModel->sobrantesDe($fecha_ayer);
 $horneadasHoy  = $arqueoModel->horneadasDe($fecha_sel);
 $detalleHoy    = $arqueoModel->detalleDe($fecha_sel);
 $cajaHoy       = $arqueoModel->cajaDe($fecha_sel);
+$entregadasHoy = $arqueoModel->entregadasDe($fecha_sel);   // piezas que salieron en pedidos
+$abonosHoy     = $arqueoModel->abonosDe($fecha_sel);       // dinero de pedidos recibido ese día
 $historial     = $arqueoModel->historial(15);
 
 $pagina_activa = 'arqueo';

@@ -31,6 +31,10 @@ $_SESSION['user_nombre'] = $nombreUsuario;
 $_SESSION['user_rol']    = $rolUsuario;
 $_SESSION['user_foto']   = $userData['foto_url'] ?? '';
 
+// Foto de perfil real (busca el archivo aunque la ruta guardada no coincida); "" si no tiene
+require_once __DIR__ . '/../Models/PerfilModel.php';
+$fotoUsuario = PerfilModel::rutaImagen($userData['foto_url'] ?? '', 'perfil', $usuario_id);
+
 /**
  * Corta el acceso si el usuario actual no es administrador.
  * Se llama al inicio de los controladores exclusivos de administración

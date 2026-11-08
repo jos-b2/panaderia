@@ -34,15 +34,17 @@ class ReporteModel {
 
     /** Piezas horneadas y vendidas por día. */
     public function produccionVsVentas($desde, $hasta) {
-        $horneadas = $this->porFecha("SELECT fecha, SUM(piezas) FROM producciones WHERE anulada = 0 AND fecha BETWEEN ? AND ? GROUP BY fecha", $desde, $hasta);
+        $horneadas = $this->porFecha("SELECT fecha, SUM(piezas) FROM producciones WHERE anulada = 0 AND estado = 'lista' AND fecha BETWEEN ? AND ? GROUP BY fecha", $desde, $hasta);
         $vendidas  = $this->porFecha("SELECT fecha, SUM(vendidas) FROM arqueo_detalle WHERE fecha BETWEEN ? AND ? GROUP BY fecha", $desde, $hasta);
+        // Pedidos entregados también son piezas vendidas
+        $entregadas = $this->porFecha("SELECT DATE(p.entregado_en), SUM(pi.cantidad) FROM pedidos p JOIN pedido_items pi ON pi.pedido_id = p.id WHERE p.estado = 'entregado' AND DATE(p.entregado_en) BETWEEN ? AND ? GROUP BY DATE(p.entregado_en)", $desde, $hasta);
 
         $filas = [];
         foreach (self::dias($desde, $hasta) as $dia) {
             $filas[] = [
                 'fecha'     => $dia,
                 'horneadas' => (int)($horneadas[$dia] ?? 0),
-                'vendidas'  => (int)($vendidas[$dia] ?? 0),
+                'vendidas'  => (int)($vendidas[$dia] ?? 0) + (int)($entregadas[$dia] ?? 0),
             ];
         }
         return $filas;
@@ -70,13 +72,15 @@ class ReporteModel {
         $stmt = $this->pdo->prepare("
             SELECT p.nombre, p.precio,
                    COALESCE((SELECT SUM(pr.piezas) FROM producciones pr
-                             WHERE pr.producto_id = p.id AND pr.anulada = 0 AND pr.fecha BETWEEN ? AND ?), 0) AS horneadas,
+                             WHERE pr.producto_id = p.id AND pr.anulada = 0 AND pr.estado = 'lista' AND pr.fecha BETWEEN ? AND ?), 0) AS horneadas,
                    COALESCE((SELECT SUM(ad.vendidas) FROM arqueo_detalle ad
-                             WHERE ad.producto_id = p.id AND ad.fecha BETWEEN ? AND ?), 0) AS vendidas
+                             WHERE ad.producto_id = p.id AND ad.fecha BETWEEN ? AND ?), 0)
+                 + COALESCE((SELECT SUM(pi.cantidad) FROM pedido_items pi JOIN pedidos pe ON pe.id = pi.pedido_id
+                             WHERE pi.producto_id = p.id AND pe.estado = 'entregado' AND DATE(pe.entregado_en) BETWEEN ? AND ?), 0) AS vendidas
             FROM productos p
             ORDER BY p.nombre ASC
         ");
-        $stmt->execute([$desde, $hasta, $desde, $hasta]);
+        $stmt->execute([$desde, $hasta, $desde, $hasta, $desde, $hasta]);
 
         return array_map(function ($f) {
             return [

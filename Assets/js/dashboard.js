@@ -95,28 +95,45 @@ function inicializarFormularioPerfil() {
             const caja = this.closest('.pf-drop');
             if (!archivo) return;
 
-            if (caja) {
-                caja.classList.add('has-file');
-                const nombre = caja.querySelector('.pf-drop-name');
-                if (nombre) nombre.textContent = archivo.name;
+            // La foto de perfil pasa primero por el recorte (como WhatsApp)
+            if (this.dataset.preview === 'avatar' && typeof Cropper !== 'undefined') {
+                abrirRecorte(archivo, (recortado) => {
+                    // Reemplaza el archivo elegido por el recorte
+                    const dt = new DataTransfer();
+                    dt.items.add(recortado);
+                    this.files = dt.files;
+                    mostrarArchivo(this, recortado, caja);
+                }, () => { this.value = ''; });
+                return;
             }
 
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                if (this.dataset.preview === 'avatar') {
-                    const img = document.getElementById('modalAvatarImg');
-                    if (img) {
-                        img.src = e.target.result;
-                        img.closest('.pf-avatar')?.classList.add('has-photo');
-                    }
-                } else {
-                    const portada = document.getElementById('modalBannerDiv');
-                    if (portada) portada.style.backgroundImage = `url('${e.target.result}')`;
-                }
-            };
-            reader.readAsDataURL(archivo);
+            mostrarArchivo(this, archivo, caja);
         });
     });
+
+    /** Marca la caja como lista y muestra la vista previa en la tarjeta. */
+    function mostrarArchivo(input, archivo, caja) {
+        if (caja) {
+            caja.classList.add('has-file');
+            const nombre = caja.querySelector('.pf-drop-name');
+            if (nombre) nombre.textContent = input.dataset.preview === 'avatar' ? 'Foto recortada' : archivo.name;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            if (input.dataset.preview === 'avatar') {
+                const img = document.getElementById('modalAvatarImg');
+                if (img) {
+                    img.src = e.target.result;
+                    img.closest('.pf-avatar')?.classList.add('has-photo');
+                }
+            } else {
+                const portada = document.getElementById('modalBannerDiv');
+                if (portada) portada.style.backgroundImage = `url('${e.target.result}')`;
+            }
+        };
+        reader.readAsDataURL(archivo);
+    }
 
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
@@ -152,6 +169,9 @@ function inicializarFormularioPerfil() {
                     reader.onload = function(e) {
                         const avatarImg = document.getElementById('modalAvatarImg');
                         if (avatarImg) avatarImg.src = e.target.result;
+                        // Foto del botón de usuario en la barra superior
+                        const fotoBarra = document.querySelector('.menu-user-foto');
+                        if (fotoBarra) fotoBarra.innerHTML = `<img src="${e.target.result}" alt="">`;
                     };
                     reader.readAsDataURL(fotoInput.files[0]);
                 }
@@ -191,3 +211,102 @@ window.addEventListener('click', (e) => {
         cerrarPerfilModal();
     }
 });
+/* ==========================================================================
+   Recorte de la foto de perfil (estilo WhatsApp) con Cropper.js
+   Marco cuadrado fijo: se arrastra la imagen y se hace zoom (rueda, pellizco
+   o la barra) y se puede girar. Devuelve un JPG de 600×600.
+   ========================================================================== */
+function abrirRecorte(archivo, alListo, alCancelar) {
+    const url = URL.createObjectURL(archivo);
+    const capa = document.createElement('div');
+    capa.className = 'recorte-capa';
+    capa.innerHTML = `
+        <div class="recorte-caja" role="dialog" aria-modal="true" aria-label="Ajustar foto de perfil">
+            <header class="recorte-head">
+                <button type="button" class="recorte-x" data-r="cancelar" aria-label="Cancelar"><i class="ph ph-x"></i></button>
+                <div>
+                    <strong>Ajusta tu foto</strong>
+                    <small>Arrastra para moverla y usa la rueda o la barra para acercar</small>
+                </div>
+            </header>
+            <div class="recorte-area"><img alt=""></div>
+            <div class="recorte-controles">
+                <button type="button" class="recorte-btn" data-r="girar-izq" title="Girar a la izquierda"><i class="ph-duotone ph-arrow-counter-clockwise"></i></button>
+                <i class="ph ph-magnifying-glass-minus"></i>
+                <input type="range" min="0" max="1" step="0.001" value="0" class="recorte-zoom" aria-label="Zoom">
+                <i class="ph ph-magnifying-glass-plus"></i>
+                <button type="button" class="recorte-btn" data-r="girar-der" title="Girar a la derecha"><i class="ph-duotone ph-arrow-clockwise"></i></button>
+            </div>
+            <footer class="recorte-pie">
+                <button type="button" class="btn btn-outline-secondary" data-r="cancelar">Cancelar</button>
+                <button type="button" class="btn btn-brand" data-r="listo"><i class="ph ph-check"></i>Listo</button>
+            </footer>
+        </div>`;
+    document.body.appendChild(capa);
+    requestAnimationFrame(() => capa.classList.add('is-open'));
+
+    const img = capa.querySelector('.recorte-area img');
+    const zoom = capa.querySelector('.recorte-zoom');
+    let zoomMin = 0, zoomMax = 1, ajustandoBarra = false;
+
+    img.src = url;
+    const cropper = new Cropper(img, {
+        aspectRatio: 1,
+        viewMode: 1,               // la imagen siempre cubre el marco
+        dragMode: 'move',          // se arrastra la imagen, no el marco
+        autoCropArea: 1,
+        cropBoxMovable: false,
+        cropBoxResizable: false,
+        toggleDragModeOnDblclick: false,
+        guides: false,
+        center: false,
+        highlight: false,
+        background: false,
+        responsive: true,
+        ready() {
+            // Rango de la barra: desde "llenar el marco" hasta 4 veces más cerca
+            const datos = cropper.getImageData();
+            zoomMin = datos.width / datos.naturalWidth;
+            zoomMax = zoomMin * 4;
+            zoom.min = zoomMin; zoom.max = zoomMax; zoom.step = (zoomMax - zoomMin) / 200;
+            zoom.value = zoomMin;
+        },
+        zoom(e) {
+            // No alejar más allá de llenar el marco
+            if (e.detail.ratio < zoomMin) { e.preventDefault(); cropper.zoomTo(zoomMin); }
+            if (e.detail.ratio > zoomMax) { e.preventDefault(); cropper.zoomTo(zoomMax); }
+            if (!ajustandoBarra) zoom.value = Math.min(zoomMax, Math.max(zoomMin, e.detail.ratio));
+        }
+    });
+
+    zoom.addEventListener('input', () => {
+        ajustandoBarra = true;
+        cropper.zoomTo(parseFloat(zoom.value));
+        ajustandoBarra = false;
+    });
+
+    function cerrar() {
+        capa.classList.remove('is-open');
+        document.removeEventListener('keydown', teclado);
+        setTimeout(() => { cropper.destroy(); capa.remove(); URL.revokeObjectURL(url); }, 250);
+    }
+
+    function teclado(e) {
+        if (e.key === 'Escape') { cerrar(); alCancelar(); }
+    }
+    document.addEventListener('keydown', teclado);
+
+    capa.addEventListener('click', (e) => {
+        const accion = e.target.closest('[data-r]')?.dataset.r;
+        if (accion === 'cancelar') { cerrar(); alCancelar(); }
+        if (accion === 'girar-izq') cropper.rotate(-90);
+        if (accion === 'girar-der') cropper.rotate(90);
+        if (accion === 'listo') {
+            const canvas = cropper.getCroppedCanvas({ width: 600, height: 600, fillColor: '#FFFFFF', imageSmoothingQuality: 'high' });
+            canvas.toBlob((blob) => {
+                cerrar();
+                alListo(new File([blob], 'perfil.jpg', { type: 'image/jpeg' }));
+            }, 'image/jpeg', 0.9);
+        }
+    });
+}

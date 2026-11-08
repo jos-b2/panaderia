@@ -273,19 +273,80 @@
 
 .prod-submit { padding: 12px 22px !important; font-size: 14px !important; }
 
-/* ---------- Últimas tandas (línea de tiempo) ---------- */
+/* ---------- Botón "!" y panel ¿Cómo funciona? ---------- */
+.prod-wizard-title { flex: 1; min-width: 0; }
+
+.prod-info-btn {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    color: var(--accent-dk);
+    font-family: var(--font-head);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease, transform .15s ease;
+}
+
+.prod-info-btn:hover { background: var(--accent-lt); transform: translateY(-1px); }
+.prod-info-btn.is-open { background: var(--accent); color: #FFFFFF; }
+
+.prod-info-panel {
+    margin: 0 26px;
+    padding: 18px 20px;
+    background: linear-gradient(145deg, #FFFDF8, var(--accent-lt));
+    border: 1px solid #E4CDA6;
+    border-left: 3px solid var(--accent);
+    animation: entrarArriba .3s ease both;
+}
+
+.prod-info-panel[hidden] { display: none; }
+
+.prod-info-panel h4 {
+    font-family: var(--font-head);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 12px;
+}
+
+.prod-info-panel ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 18px; }
+.prod-info-panel li { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; line-height: 1.5; color: var(--ink-soft); }
+
+.prod-info-panel li i {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFFFFF;
+    border: 1px solid #E4CDA6;
+    color: var(--accent-dk);
+    font-size: 16px;
+}
+
+.prod-wizard.is-editing { border-top-color: var(--info) !important; }
+
+/* ---------- Tandas (línea de tiempo con etapas) ---------- */
 .prod-timeline { list-style: none; margin: 0; padding: 0; }
 
 .prod-timeline li {
-    display: flex;
-    align-items: center;
-    gap: 12px;
     padding: 12px 0;
     border-bottom: 1px dashed var(--line);
 }
 
 .prod-timeline li:last-child { border-bottom: 0; padding-bottom: 0; }
 .prod-timeline li:first-child { padding-top: 0; }
+.prod-timeline li.is-current { background: #EEF2F7; margin: 0 -10px; padding-left: 10px; padding-right: 10px; }
+
+.prod-tl-row { display: flex; align-items: center; gap: 12px; }
 
 .prod-date {
     width: 44px;
@@ -298,6 +359,7 @@
 
 .prod-date strong {
     display: block;
+    color: #FFFFFF !important;
     font-family: var(--font-head);
     font-size: 19px;
     line-height: 1;
@@ -349,51 +411,50 @@
 
 .prod-batch-pieces small { font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
 
-.prod-void-btn {
-    width: 32px;
-    height: 32px;
+.prod-tl-foot {
     display: flex;
     align-items: center;
-    justify-content: center;
-    background: transparent;
-    border: 1px solid #E3C3BC;
-    color: var(--danger);
-    font-size: 16px;
-    cursor: pointer;
-    transition: background .15s ease, color .15s ease;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    padding-left: 56px;
 }
 
-.prod-void-btn:hover { background: var(--danger); color: #FFFFFF; border-color: var(--danger); }
-
-.prod-void-tag {
-    font-size: 9.5px;
+.prod-etapa {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    font-size: 10.5px;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--muted);
-    border: 1px solid var(--line);
-    padding: 3px 6px;
 }
 
-.prod-timeline li.is-void { opacity: 0.55; }
-.prod-timeline li.is-void .prod-batch-name { text-decoration: line-through; }
-.prod-timeline li.is-void .prod-date { background: var(--muted); }
+.prod-etapa i { font-size: 14px; }
+.prod-etapa.etapa-registrada { background: #EEF2F7; color: var(--info); }
+.prod-etapa.etapa-amasando   { background: var(--accent-lt); color: var(--accent-dk); }
+.prod-etapa.etapa-horneando  { background: #FBE7D9; color: #9A4A1C; }
+.prod-etapa.etapa-lista      { background: #E7EFE4; color: var(--success); }
 
-/* ---------- ¿Cómo funciona? ---------- */
-.prod-how ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
-.prod-how li { display: flex; gap: 12px; align-items: flex-start; font-size: 13px; line-height: 1.5; color: var(--muted); }
+.prod-timeline li.etapa-registrada .prod-date { background: var(--info); }
+.prod-timeline li.etapa-lista { opacity: 0.8; }
 
-.prod-how li i {
-    width: 32px;
-    height: 32px;
-    flex-shrink: 0;
-    display: flex;
+.prod-tl-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.prod-tl-actions .btn { padding: 5px 9px !important; font-size: 12px !important; }
+
+.prod-tl-link {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    background: var(--accent-lt);
+    gap: 5px;
+    font-size: 12.5px;
+    font-weight: 600;
     color: var(--accent-dk);
-    font-size: 17px;
+    text-decoration: none;
 }
+
+.prod-tl-link:hover { color: var(--ink); }
 
 /* ---------- Pantallas medianas y pequeñas ---------- */
 @media (max-width: 1199.98px) {
@@ -417,4 +478,7 @@
     .prod-picks { grid-template-columns: 1fr 1fr; }
     .prod-wizard-foot { padding: 16px 18px 18px; }
     .prod-submit { width: 100%; }
+    .prod-info-panel { margin: 0 18px; }
+    .prod-info-panel ol { grid-template-columns: 1fr; }
+    .prod-tl-foot { padding-left: 0; }
 }

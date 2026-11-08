@@ -3,7 +3,7 @@
  * Ubicación: /panaderia/Assets/js/produccion.js
  *  - Calcula las piezas y el consumo de insumos según la receta elegida
  *  - Muestra si alcanza el stock (barra por insumo y aviso general)
- *  - Confirma antes de anular una tanda
+ *  - Botón "!", y confirmaciones de "Empezar a amasar" y "Eliminar tanda"
  */
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('formProduccion');
@@ -30,8 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return marcado ? productos[marcado.value] : null;
     }
 
+    const editando = form.classList.contains('is-editing');
+
     function actualizarBoton() {
-        if (!btnTexto) return;
+        if (!btnTexto || editando) return;   // al modificar, el botón dice "Guardar cambios"
         const piezas = parseInt(inputPiezas.value, 10) || 0;
         btnTexto.textContent = piezas > 0 ? `Registrar tanda de ${piezas} piezas` : 'Registrar tanda';
     }
@@ -104,28 +106,63 @@ document.addEventListener('DOMContentLoaded', () => {
 
     actualizar(false);
 
-    /* ---------- Confirmar antes de anular una tanda ---------- */
-    document.querySelectorAll('.js-confirm-anular').forEach(boton => {
+});
+
+/* ==========================================================================
+   Botón "!" (¿Cómo funciona?) y confirmaciones de las acciones de las tandas
+   ========================================================================== */
+document.addEventListener('DOMContentLoaded', () => {
+    /** Pide confirmación con la ventana del sistema (o la del navegador si no está) y ejecuta. */
+    function confirmar(opciones, alAceptar) {
+        if (typeof window.appConfirm === 'function') {
+            window.appConfirm({ ...opciones, alAceptar });
+        } else if (window.confirm(opciones.titulo + '\n\n' + opciones.texto)) {
+            alAceptar();
+        }
+    }
+
+    const enviar = (form) => { document.body.classList.add('page-leave'); form.submit(); };
+
+    /* ---------- "!" abre y cierra la explicación ---------- */
+    const btnInfo = document.getElementById('btnInfo');
+    const panelInfo = document.getElementById('panelInfo');
+    if (btnInfo && panelInfo) {
+        btnInfo.addEventListener('click', () => {
+            const abrir = panelInfo.hidden;
+            panelInfo.hidden = !abrir;
+            btnInfo.setAttribute('aria-expanded', String(abrir));
+            btnInfo.classList.toggle('is-open', abrir);
+        });
+    }
+
+    /* ---------- Empezar a amasar: avisa que se descuenta el inventario ---------- */
+    document.querySelectorAll('.js-amasar').forEach(boton => {
         boton.addEventListener('click', (e) => {
             e.preventDefault();
-            const formAnular = boton.closest('form');
-            const confirmar = () => {
-                document.body.classList.add('page-leave');
-                formAnular.submit();
-            };
-
-            if (typeof window.appConfirm === 'function') {
-                window.appConfirm({
-                    icono: 'ph-arrow-counter-clockwise',
-                    titulo: '¿Anular esta tanda?',
-                    texto: 'Los insumos que consumió regresarán al inventario. La tanda quedará marcada como anulada.',
-                    aceptar: 'Sí, anular',
-                    peligro: true,
-                    alAceptar: confirmar
-                });
-            } else if (window.confirm('¿Anular esta tanda y restaurar los insumos al inventario?')) {
-                confirmar();
-            }
+            confirmar({
+                icono: 'ph-hand-grabbing',
+                titulo: '¿Empezar a amasar?',
+                texto: `Se descontarán del inventario los insumos de ${boton.dataset.piezas} piezas de ${boton.dataset.producto}. Después ya no se podrá modificar la tanda.`,
+                aceptar: 'Sí, empezar a amasar'
+            }, () => enviar(boton.closest('form')));
         });
     });
+
+    /* ---------- Eliminar una tanda registrada ---------- */
+    const btnEliminar = document.getElementById('btnEliminarTanda');
+    const formEliminar = document.getElementById('formEliminarTanda');
+    if (btnEliminar && formEliminar) {
+        btnEliminar.addEventListener('click', () => {
+            confirmar({
+                icono: 'ph-trash',
+                titulo: '¿Eliminar esta tanda?',
+                texto: 'Todavía no se había amasado, así que el inventario no cambia.',
+                aceptar: 'Sí, eliminar',
+                peligro: true
+            }, () => {
+                document.getElementById('eliminarTandaId').value = btnEliminar.dataset.id;
+                enviar(formEliminar);
+            });
+        });
+    }
 });

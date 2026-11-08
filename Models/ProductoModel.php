@@ -17,12 +17,12 @@ class ProductoModel {
     }
 
     /** Crea el producto con su receta. Devuelve el id nuevo. */
-    public function crear($nombre, $precio, $base_insumo_id, $rendimiento, $ing_ids, $ing_cants) {
+    public function crear($nombre, $precio, $base_insumo_id, $rendimiento, $minutos_horneado, $minutos_volteo, $ing_ids, $ing_cants) {
         try {
             $this->pdo->beginTransaction();
 
-            $stmtProd = $this->pdo->prepare("INSERT INTO productos (nombre, precio, base_insumo_id, rendimiento) VALUES (?, ?, ?, ?)");
-            $stmtProd->execute([$nombre, $precio, $base_insumo_id, $rendimiento]);
+            $stmtProd = $this->pdo->prepare("INSERT INTO productos (nombre, precio, base_insumo_id, rendimiento, minutos_horneado, minutos_volteo) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmtProd->execute([$nombre, $precio, $base_insumo_id, $rendimiento, $minutos_horneado, $minutos_volteo]);
             $producto_id = (int)$this->pdo->lastInsertId();
 
             $this->guardarItems($producto_id, $base_insumo_id, $ing_ids, $ing_cants);
@@ -36,12 +36,12 @@ class ProductoModel {
     }
 
     /** Actualiza el producto y reemplaza todos los ingredientes de su receta. */
-    public function actualizar($producto_id, $nombre, $precio, $base_insumo_id, $rendimiento, $ing_ids, $ing_cants) {
+    public function actualizar($producto_id, $nombre, $precio, $base_insumo_id, $rendimiento, $minutos_horneado, $minutos_volteo, $ing_ids, $ing_cants) {
         try {
             $this->pdo->beginTransaction();
 
-            $stmtProd = $this->pdo->prepare("UPDATE productos SET nombre = ?, precio = ?, base_insumo_id = ?, rendimiento = ? WHERE id = ?");
-            $stmtProd->execute([$nombre, $precio, $base_insumo_id, $rendimiento, $producto_id]);
+            $stmtProd = $this->pdo->prepare("UPDATE productos SET nombre = ?, precio = ?, base_insumo_id = ?, rendimiento = ?, minutos_horneado = ?, minutos_volteo = ? WHERE id = ?");
+            $stmtProd->execute([$nombre, $precio, $base_insumo_id, $rendimiento, $minutos_horneado, $minutos_volteo, $producto_id]);
             $this->pdo->prepare("DELETE FROM receta_items WHERE producto_id = ?")->execute([$producto_id]);
 
             if (!empty($producto_id)) {
