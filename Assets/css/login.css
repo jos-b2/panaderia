@@ -1,304 +1,564 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+/* ==========================================================================
+   INICIO DE SESIÓN Y ALERTAS - PANADERÍA DON LEO
+   Ubicación: /panaderia/Assets/css/login.css
+   Pantalla dividida: foto de la panadería (izquierda) + formulario (derecha).
+   En celular, la foto queda como franja superior.
+   ========================================================================== */
 
-*{
+body.login-body {
     margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
-    text-decoration: none;
-    list-style: none;
-}
-
-body.login-body{
-    display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: 100vh;
-    background: linear-gradient(rgba(43, 33, 24, 0.8), rgba(43, 33, 24, 0.9)), url('../img/bg-panaderia.jpg');
-    background-size: cover;
-    background-position: center;
+    min-height: 100dvh;
+    background: var(--surface);
+    font-family: var(--font-body);
 }
 
-.container{
+.login-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(400px, 1fr);
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+/* ---------- Mitad visual ---------- */
+.login-visual {
     position: relative;
-    width: 850px;
-    height: 550px;
-    background: #fff;
-    margin: 20px;
-    border-radius: 0px;
-    border-left: 6px solid #D4A373;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 163, 115, 0.2);
-    overflow: hidden;
-    animation: aparecerContainer 0.8s ease-out forwards;
-}
-
-@keyframes aparecerContainer {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.container h1{
-    font-size: 34px;
-    margin: -10px 0 5px 0;
-    color: #6B4226; /* Color Corteza */
-}
-
-.container p{
-    font-size: 14.5px;
-    margin: 10px 0 20px 0;
-    color: #666;
-}
-
-form{ 
-    width: 100%; 
-    max-width: 320px;
-}
-
-.form-box{
-    position: absolute;
-    right: 0;
-    width: 50%;
-    height: 100%;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #333;
-    text-align: center;
-    padding: 40px;
-    z-index: 1;
-}
-
-.input-box{
-    position: relative;
-    margin: 25px 0;
-}
-
-.input-box input{
-    width: 100%;
-    padding: 13px 50px 13px 20px;
-    background: #f4f1ea;
-    border-radius: 6px;
-    border: 1px solid #e0d6c3;
-    outline: none;
-    font-size: 16px;
-    color: #333;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.input-box input:focus{
-    border-color: #D4A373;
-    background: #fff;
-    box-shadow: 0 0 8px rgba(212, 163, 115, 0.4);
-    transform: translateY(-2px);
-}
-
-.input-box input::placeholder{
-    color: #888;
-    font-weight: 400;
-}
-
-.input-box i{
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 20px;
-    color: #6B4226;
-    transition: color 0.3s ease;
-}
-
-.input-box input:focus ~ i {
-    color: #D4A373;
-}
-
-/* Botón con Café Oscuro elegante y con presencia */
-.btn{
-    width: 100%;
-    height: 48px;
-    background: #5A3825; /* Café oscuro corporativo */
-    border-radius: 6px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    color: #FEFAE0; /* Texto en tono crema para buen contraste */
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.btn:hover {
-    background: #462A1B; /* Café un toque más profundo al pasar el mouse */
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(90, 56, 37, 0.4);
-    color: #ffffff;
-}
-
-.toggle-box{
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 50%;
-    height: 100%;
-    background: linear-gradient(135deg, #6B4226, #4e301b);
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.toggle-panel{
-    color: #FEFAE0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
+    padding: clamp(32px, 6vh, 64px) clamp(32px, 5vw, 72px);
+    color: #FFFFFF;
+    background:
+        linear-gradient(160deg, rgba(27, 17, 11, 0.55) 0%, rgba(27, 17, 11, 0.78) 55%, rgba(20, 12, 7, 0.95) 100%),
+        url('../img/bg-panaderia.jpg') center / cover no-repeat;
+    overflow: hidden;
+    animation: fadeVisual 1s ease-out both;
+}
+
+/* Marco dorado interior */
+.login-visual::before {
+    content: "";
+    position: absolute;
+    inset: 22px;
+    border: 1px solid rgba(217, 168, 95, 0.32);
+    pointer-events: none;
+}
+
+/* Línea dorada que separa ambas mitades */
+.login-visual::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, #E2B577, #C08A3E 50%, #8E5F22);
+}
+
+@keyframes fadeVisual {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.login-visual-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 520px;
+    animation: subir .9s .15s ease-out both;
+}
+
+@keyframes subir {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.login-emblem {
+    width: 74px;
+    height: 74px;
+    display: flex;
     align-items: center;
-    padding: 30px;
-    text-align: center;
+    justify-content: center;
+    background: rgba(20, 12, 7, 0.55);
+    border: 1px solid rgba(217, 168, 95, 0.6);
+    margin-bottom: 26px;
 }
 
-.toggle-panel h1 {
-    color: #FEFAE0 !important;
-    font-size: 28px;
-    margin-bottom: 8px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-.toggle-panel p{ 
-    color: #FEFAE0; 
-    font-size: 13.5px;
-    margin-bottom: 0;
-    opacity: 0.9;
-}
-
-.pan-img-preview {
-    width: 210px;
+.login-emblem img {
+    width: 54px;
     height: auto;
-    object-fit: contain;
-    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
+    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5));
     animation: flotarPan 4s ease-in-out infinite;
 }
 
 @keyframes flotarPan {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-8px);
-    }
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-4px); }
 }
 
-@media screen and (max-width: 650px){
-    .container{ height: calc(100vh - 40px); }
-
-    .toggle-box{
-        width: 100%;
-        height: 35%;
-    }
-
-    .form-box{
-        bottom: 0;
-        width: 100%;
-        height: 65%;
-        right: 0;
-    }
+.login-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #D9A85F;
+    margin-bottom: 16px;
 }
 
-/* ==========================================================
-   ALERTAS PERSONALIZADAS - PALETA ESTRICTA DE LA PANADERÍA
-   ================================================---------- */
+.login-kicker::before {
+    content: "";
+    width: 34px;
+    height: 1px;
+    background: #D9A85F;
+}
+
+.login-quote {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(34px, 4.2vw, 58px);
+    line-height: 1.08;
+    color: #FFFFFF;
+    margin: 0 0 18px;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+}
+
+.login-quote em {
+    font-style: italic;
+    color: #E8C089;
+}
+
+.login-lead {
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.75);
+    max-width: 420px;
+    margin: 0;
+}
+
+.login-features {
+    position: relative;
+    z-index: 1;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 26px;
+    padding: 22px 0 0;
+    margin: clamp(28px, 6vh, 56px) 0 0;
+    border-top: 1px solid rgba(217, 168, 95, 0.3);
+    animation: subir .9s .3s ease-out both;
+}
+
+.login-features li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.78);
+}
+
+.login-features i { font-size: 17px; color: #D9A85F; }
+
+/* ---------- Mitad del formulario ---------- */
+.form-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(32px, 6vh, 64px) clamp(24px, 5vw, 64px);
+    background:
+        radial-gradient(500px 300px at 100% 0%, rgba(192, 138, 62, 0.08), transparent 70%),
+        var(--surface);
+}
+
+.form-box form {
+    width: 100%;
+    max-width: 380px;
+    animation: subir .8s .1s ease-out both;
+}
+
+.login-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: clamp(28px, 6vh, 48px);
+}
+
+.login-brand-mark {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ink);
+}
+
+.login-brand-mark img { width: 30px; height: auto; }
+
+.login-brand-name {
+    font-family: var(--font-head);
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.form-box h1 {
+    font-family: var(--font-head);
+    font-size: clamp(32px, 3vw, 40px);
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+}
+
+.login-sub {
+    color: var(--muted);
+    font-size: 15px;
+    margin: 0 0 30px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+}
+
+.login-sub::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 56px;
+    height: 2px;
+    background: var(--accent);
+}
+
+.login-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+}
+
+.input-box {
+    position: relative;
+    margin: 0 0 20px;
+}
+
+.input-box input {
+    width: 100%;
+    height: 52px;
+    padding: 0 48px 0 16px;
+    background: #FFFFFF;
+    border: 1px solid var(--line);
+    border-bottom: 2px solid #D9C9B2;
+    outline: none;
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--ink);
+    transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+}
+
+.input-box input:hover { border-color: #D9C9B2; }
+
+.input-box input:focus {
+    border-color: var(--accent);
+    border-bottom-color: var(--accent);
+    box-shadow: 0 8px 22px rgba(192, 138, 62, 0.14);
+}
+
+.input-box input::placeholder { color: #B0A091; }
+
+.input-box i {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #A8917A;
+    transition: color .15s ease;
+}
+
+.input-box input:focus ~ i { color: var(--accent); }
+
+.form-box .btn {
+    position: relative;
+    width: 100%;
+    height: 54px;
+    margin-top: 10px;
+    overflow: hidden;
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    color: #FEFAE0;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background .2s ease, letter-spacing .2s ease;
+}
+
+/* Barrido dorado al pasar el ratón */
+.form-box .btn::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 3px;
+    background: var(--accent);
+    transition: width .35s ease;
+}
+
+.form-box .btn:hover { background: var(--espresso); color: #FFFFFF; letter-spacing: 0.22em; }
+.form-box .btn:hover::after { width: 100%; }
+.form-box .btn:disabled { opacity: .75; cursor: wait; }
+
+.login-foot {
+    margin: 34px 0 0;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    letter-spacing: 0.03em;
+}
+
+/* ---------- Tablet: la foto se reduce ---------- */
+@media (max-width: 1099.98px) {
+    .login-shell { grid-template-columns: minmax(0, 1fr) minmax(380px, 1fr); }
+    .login-features { gap: 10px 18px; }
+}
+
+/* ---------- Celular: la foto pasa a ser una franja superior ---------- */
+@media (max-width: 799.98px) {
+    .login-shell { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+
+    .login-visual {
+        padding: 34px 26px 30px;
+        min-height: 0;
+    }
+
+    .login-visual::before { inset: 12px; }
+
+    .login-visual::after {
+        top: auto;
+        left: 0;
+        width: auto;
+        height: 3px;
+        background: linear-gradient(90deg, #E2B577, #C08A3E 50%, #8E5F22);
+    }
+
+    .login-emblem { width: 56px; height: 56px; margin-bottom: 16px; }
+    .login-emblem img { width: 40px; }
+    .login-kicker { margin-bottom: 10px; font-size: 10px; }
+    .login-quote { font-size: 30px; margin-bottom: 0; }
+    .login-lead, .login-features { display: none; }
+
+    .form-box { align-items: flex-start; padding: 30px 24px 36px; }
+    .login-brand { display: none; }
+    .form-box h1 { font-size: 30px; }
+    .login-sub { margin-bottom: 24px; padding-bottom: 18px; }
+}
+
+/* ==========================================================================
+   PAN FLOTANTE (centro de la mitad visual, sin recuadro)
+   ========================================================================== */
+.login-hero-pan {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0 24px;
+    animation: subir .9s ease-out both;
+}
+
+/* Resplandor dorado detrás del pan */
+.pan-halo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: clamp(220px, min(34vw, 46vh), 440px);
+    aspect-ratio: 1;
+    transform: translate(-50%, -54%);
+    background: radial-gradient(circle, rgba(232, 192, 137, 0.42) 0%, rgba(192, 138, 62, 0.16) 42%, transparent 70%);
+    animation: respirarHalo 5s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.pan-flotante {
+    position: relative;
+    z-index: 2;
+    width: clamp(150px, min(22vw, 30vh), 290px);
+    height: auto;
+    filter: drop-shadow(0 22px 26px rgba(0, 0, 0, 0.55));
+    animation: flotarPan 5s ease-in-out infinite;
+}
+
+/* Sombra en el "piso" que se achica cuando el pan sube */
+.pan-sombra {
+    position: relative;
+    z-index: 1;
+    width: clamp(110px, min(16vw, 22vh), 210px);
+    height: 18px;
+    margin-top: 4px;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.25) 45%, transparent 72%);
+    animation: sombraPan 5s ease-in-out infinite;
+}
+
+@keyframes flotarPan {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50%      { transform: translateY(-20px) rotate(2deg); }
+}
+
+@keyframes sombraPan {
+    0%, 100% { transform: scaleX(1);    opacity: 0.75; }
+    50%      { transform: scaleX(0.72); opacity: 0.4; }
+}
+
+@keyframes respirarHalo {
+    0%, 100% { opacity: 0.75; transform: translate(-50%, -54%) scale(0.96); }
+    50%      { opacity: 1;    transform: translate(-50%, -54%) scale(1.05); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pan-flotante, .pan-sombra, .pan-halo { animation: none; }
+}
+
+/* Íconos Phosphor del login */
+.login-brand-mark i { font-size: 24px; color: #E8C089; }
+.input-box i { font-size: 21px; }
+.login-features i { font-size: 18px; }
+
+/* Celular: pan más pequeño en la franja superior */
+@media (max-width: 799.98px) {
+    .login-hero-pan { padding: 0 0 14px; }
+    .pan-flotante { width: 118px; }
+    .pan-halo { width: 200px; }
+    .pan-sombra { width: 90px; height: 12px; }
+}
+
+/* ==========================================================================
+   COMPOSICIÓN CENTRADA DE LA MITAD VISUAL
+   Pan + rótulo + frase al centro; los módulos quedan abajo.
+   ========================================================================== */
+.login-visual { align-items: center; text-align: center; }
+
+.login-hero-pan {
+    flex: none;
+    margin-top: auto;
+    padding: 0 0 18px;
+}
+
+.pan-flotante { width: clamp(150px, min(24vw, 30vh), 300px); }
+.pan-halo     { width: clamp(240px, min(38vw, 52vh), 480px); }
+.pan-sombra   { width: clamp(110px, min(17vw, 21vh), 220px); }
+
+.login-visual-inner { margin: 0 auto; max-width: 560px; }
+
+.login-kicker::after {
+    content: "";
+    width: 34px;
+    height: 1px;
+    background: #D9A85F;
+}
+
+.login-lead { margin: 0 auto; }
+
+.login-features {
+    margin-top: auto;
+    width: 100%;
+    justify-content: center;
+}
+
+@media (max-width: 799.98px) {
+    .login-hero-pan { margin-top: 0; }
+    .pan-flotante { width: 120px; }
+    .pan-halo { width: 210px; }
+    .pan-sombra { width: 90px; }
+}
+
+/* ==========================================================================
+   ALERTAS PERSONALIZADAS (login.js)
+   ========================================================================== */
 .alert_modal {
     position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 999999;
-    background-color: rgba(43, 33, 24, 0.85); /* Tono corteza oscuro translúcido */
+    inset: 0;
+    z-index: 3000;
+    background-color: rgba(20, 12, 7, 0.8);
     backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: "Poppins", sans-serif;
+    padding: 16px;
+    font-family: var(--font-body);
 }
 
 .alert_container {
-    width: 90%;
-    background-color: #FEFAE0; /* Color Crema */
-    border-radius: 6px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 380px;
+    background-color: var(--surface);
+    border-top: 3px solid var(--accent);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
     overflow: hidden;
-    animation: 0.4s ease-out alert_container_animation;
+    animation: alertIn .3s ease-out;
 }
 
-@media (min-width: 600px) {
-    .alert_container {
-        width: 380px;
-    }
-}
-
-@keyframes alert_container_animation {
-    0% {
-        transform: scale(0.7);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
+@keyframes alertIn {
+    from { transform: scale(0.94); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
 }
 
 .alert_heading {
-    padding: 20px;
+    padding: 22px;
     text-align: center;
-    background-color: #6B4226; /* Por defecto Color Corteza */
+    background-color: var(--ink);
 }
 
 .alert_details {
-    padding: 20px 20px 10px 20px;
+    padding: 22px 22px 12px;
     text-align: center;
 }
 
 .alert_details h2 {
-    font-size: 20px;
+    font-family: var(--font-head);
+    font-size: 21px;
     font-weight: 700;
-    color: #6B4226; /* Color Corteza */
+    color: var(--ink);
 }
 
 .alert_details p {
     font-size: 14px;
-    color: #525252;
-    line-height: 1.5em;
+    color: #5A4A3E;
+    line-height: 1.5;
     margin-top: 8px;
 }
 
 .alert_footer {
-    background-color: #f4f1ea;
-    padding: 12px;
-    text-align: center;
+    background-color: var(--surface-2);
+    padding: 14px;
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
-    border-top: 1px solid #e0d6c3;
+    justify-content: center;
+    gap: 12px;
+    border-top: 1px solid var(--line);
 }
 
 .alert_footer span {
     font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     cursor: pointer;
-    padding: 6px 22px;
-    border-radius: 6px;
-    background-color: #6B4226; /* Color Corteza */
-    color: #FEFAE0; /* Color Crema */
-    transition: background 0.2s ease;
+    padding: 9px 24px;
+    background-color: var(--ink);
+    color: #FEFAE0;
+    transition: background .15s ease;
 }
 
-.alert_footer span:hover {
-    background-color: #5A3825; /* Tono de corteza profundo */
-}
+.alert_footer span:hover { background-color: var(--espresso); }

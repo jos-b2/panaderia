@@ -1,0 +1,191 @@
+/* ==========================================================================
+   REPORTES - PANADERÍA DON LEO
+   Ubicación: /panaderia/Assets/css/reportes.css
+   Filtro de fechas + exportar, franja de resumen y cuadrícula de gráficas.
+   ========================================================================== */
+
+/* ---------- Barra de filtro y exportación ---------- */
+.rep-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 18px 22px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--accent);
+    box-shadow: var(--shadow);
+}
+
+.rep-range {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0;
+}
+
+.rep-field .form-label { margin-bottom: 5px; }
+.rep-field .form-control { width: 160px; }
+
+.rep-presets {
+    display: flex;
+    border: 1px solid var(--line);
+    background: #FFFFFF;
+    height: 40px;
+}
+
+.rep-presets a {
+    display: flex;
+    align-items: center;
+    padding: 0 13px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background .15s ease, color .15s ease;
+}
+
+.rep-presets a + a { border-left: 1px solid var(--line); }
+.rep-presets a:hover { background: var(--surface-2); color: var(--ink); }
+.rep-presets a.active { background: var(--ink); color: #FEFAE0; }
+
+.rep-export { display: flex; gap: 10px; flex-wrap: wrap; margin-left: auto; }
+.rep-export .btn i { font-size: 19px; }
+#btnExportarPdf i { color: var(--danger); }
+#btnExportarExcel i { color: var(--success); }
+#btnExportarPdf:hover i, #btnExportarExcel:hover i { color: inherit; }
+
+#formPdf { display: none; }
+
+/* ---------- Franja de resumen del periodo ---------- */
+.rep-summary {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    background: linear-gradient(120deg, #2E1D13, #1F140D);
+    border-bottom: 2px solid var(--accent);
+    box-shadow: var(--shadow);
+}
+
+.rep-summary > div {
+    padding: 16px 20px;
+    min-width: 0;
+}
+
+.rep-summary > div + div { border-left: 1px solid rgba(255, 255, 255, 0.08); }
+
+.rep-summary small {
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #C9A77D;
+    margin-bottom: 4px;
+}
+
+.rep-summary strong {
+    display: block;
+    font-family: var(--font-head);
+    font-size: 24px;
+    line-height: 1.1;
+    color: #FFFFFF;
+    font-variant-numeric: lining-nums;
+    font-feature-settings: "lnum" 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ---------- Cuadrícula de gráficas ---------- */
+.rep-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.rep-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    padding: 20px 22px 18px;
+    min-width: 0;
+    transition: box-shadow .2s ease;
+}
+
+.rep-card:hover { box-shadow: 0 2px 4px rgba(36, 23, 15, 0.05), 0 14px 30px rgba(36, 23, 15, 0.08); }
+
+.rep-wide { grid-column: 1 / -1; }
+
+.rep-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--line-soft);
+}
+
+.rep-card-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-family: var(--font-head);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 2px;
+}
+
+.rep-card-title i { font-size: 21px; color: var(--accent-dk); }
+.rep-card-head small { color: var(--muted); font-size: 12.5px; }
+
+.rep-total {
+    flex-shrink: 0;
+    padding: 5px 10px;
+    background: var(--accent-lt);
+    color: var(--ink);
+    font-family: var(--font-head);
+    font-size: 15px;
+    font-weight: 700;
+    white-space: nowrap;
+    font-variant-numeric: lining-nums;
+    font-feature-settings: "lnum" 1;
+}
+
+.rep-total.is-neg { background: #F7E6E2; color: var(--danger); }
+
+.rep-chart { position: relative; height: 270px; }
+.rep-chart-lg { height: 300px; }
+
+/* ---------- Pantallas medianas y pequeñas ---------- */
+@media (max-width: 1199.98px) {
+    .rep-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .rep-summary > div:nth-child(4) { border-left: 0; }
+    .rep-summary > div:nth-child(n+4) { border-top: 1px solid rgba(255, 255, 255, 0.08); }
+}
+
+@media (max-width: 991.98px) {
+    .rep-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 767.98px) {
+    .rep-toolbar { padding: 16px; }
+    .rep-range, .rep-export { width: 100%; }
+    .rep-field { flex: 1; }
+    .rep-field .form-control { width: 100%; }
+    .rep-range > .btn { flex: 1; }
+    .rep-presets { width: 100%; }
+    .rep-presets a { flex: 1; justify-content: center; padding: 0 6px; font-size: 11.5px; }
+    .rep-export .btn { flex: 1; }
+    .rep-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .rep-summary > div { border-left: 0 !important; border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 12px 14px; }
+    .rep-summary > div:nth-child(-n+2) { border-top: 0; }
+    .rep-summary > div:nth-child(even) { border-left: 1px solid rgba(255, 255, 255, 0.08) !important; }
+    .rep-summary strong { font-size: 20px; }
+    .rep-card { padding: 16px; }
+    .rep-chart, .rep-chart-lg { height: 240px; }
+}

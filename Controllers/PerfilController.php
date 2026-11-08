@@ -23,14 +23,28 @@ $usuario_id = $_SESSION['user_id'];
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     try {
         $userData = (new UsuarioModel($pdo))->obtenerConPerfil($usuario_id);
+        $stats    = (new PerfilModel($pdo))->estadisticas($usuario_id);
     } catch (PDOException $e) {
         $userData = [];
+        $stats    = ['tandas' => 0, 'pedidos' => 0, 'movimientos' => 0];
     }
 
-    $nombreUsuario = htmlspecialchars(($userData['nombre_personalizado'] ?? '') ?: ($_SESSION['user_nombre'] ?? 'Administrador'));
-    $rolUsuario    = htmlspecialchars(strtoupper($userData['rol'] ?? 'ADMIN'));
-    $fotoPerfil    = ($userData['foto_url'] ?? '') ?: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop';
-    $bannerPerfil  = ($userData['banner_url'] ?? '') ?: 'https://images.unsplash.com/photo-1545703549-7bdb1d01b734?q=80&w=600&auto=format&fit=crop';
+    $buscarImagen = fn($url, $carpeta) => PerfilModel::rutaImagen($url, $carpeta, $usuario_id);
+
+    $meses = ['', 'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+    $nombreUsuario = ($userData['nombre_personalizado'] ?? '') ?: ($userData['nombre'] ?? ($_SESSION['user_nombre'] ?? 'Usuario'));
+    $loginUsuario  = $userData['usuario'] ?? '';
+    $rolUsuario    = ($userData['rol'] ?? '') === 'admin' ? 'Administrador' : 'Empleado';
+    $activo        = (int)($userData['activo'] ?? 1) === 1;
+    $inicial       = mb_strtoupper(mb_substr($nombreUsuario, 0, 1));
+    $fotoPerfil    = $buscarImagen($userData['foto_url'] ?? '', 'perfil');
+    $bannerPerfil  = $buscarImagen($userData['banner_url'] ?? '', 'banner') ?: '/panaderia/Assets/img/bg-panaderia.jpg';
+    $miembroDesde  = '';
+    if (!empty($userData['creado'])) {
+        $ts = strtotime($userData['creado']);
+        $miembroDesde = date('j', $ts) . ' de ' . $meses[(int)date('n', $ts)] . ' de ' . date('Y', $ts);
+    }
 
     require __DIR__ . '/../src/Views/Public/perfil.php';
     exit;

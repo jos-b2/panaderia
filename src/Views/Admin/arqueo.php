@@ -13,16 +13,16 @@ if (realpath($_SERVER["SCRIPT_FILENAME"]) === __FILE__) {
 include_once __DIR__ . '/../Layouts/header.php';
 ?>
 
-<link rel="stylesheet" href="/panaderia/Assets/css/siderbar.css">
-<link rel="stylesheet" href="/panaderia/Assets/css/arqueo.css">
+<link rel="stylesheet" href="/panaderia/Assets/css/siderbar.css?v=4">
+<link rel="stylesheet" href="/panaderia/Assets/css/arqueo.css?v=2">
 
 <div class="d-flex">
     <?php include_once __DIR__ . '/../Layouts/sidebar.php'; ?>
 
-    <div class="main flex-grow-1 p-4">
-        <div class="arq-header-section mb-4">
+    <div class="main">
+        <div class="page-head arq-header-section mb-4">
             <div class="d-flex justify-content-between align-items-baseline flex-wrap gap-2">
-                <h2 class="fw-bold" style="color: #6B4226; font-family: Georgia, serif; font-size: 28px; margin-bottom: 4px;">Arqueo diario</h2>
+                <h2 class="fw-bold page-title">Arqueo diario</h2>
                 <div class="text-muted small">
                     <?php 
                         $meses = ["", "ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
@@ -33,16 +33,16 @@ include_once __DIR__ . '/../Layouts/header.php';
         </div>
 
         <?php if ($mensaje !== ''): ?>
-            <div class="alert alert-<?= $tipo_alerta ?> alert-dismissible fade show py-2 px-3 mb-3" role="alert" style="font-size: 13.5px; border-radius: 10px;">
+            <div class="alert alert-<?= $tipo_alerta ?> alert-dismissible fade show py-2 px-3 mb-3" role="alert">
                 <?= htmlspecialchars($mensaje) ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar" style="padding: 0.65rem;"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
             </div>
         <?php endif; ?>
 
         <div class="arq-tabs mb-4 d-flex gap-2">
-            <button type="button" class="arq-tab-btn active" data-target="tab-cuadre">Cuadre de Productos</button>
-            <button type="button" class="arq-tab-btn" data-target="tab-cierre">Ingresos y Cierre</button>
-            <button type="button" class="arq-tab-btn" data-target="tab-historial">Historial</button>
+            <button type="button" class="arq-tab-btn active" data-target="tab-cuadre"><i class="ph-duotone ph-list-checks"></i>Cuadre de Productos</button>
+            <button type="button" class="arq-tab-btn" data-target="tab-cierre"><i class="ph-duotone ph-cash-register"></i>Ingresos y Cierre</button>
+            <button type="button" class="arq-tab-btn" data-target="tab-historial"><i class="ph-duotone ph-clock-counter-clockwise"></i>Historial</button>
         </div>
 
         <form method="post" action="ArqueoController.php">
@@ -59,13 +59,13 @@ include_once __DIR__ . '/../Layouts/header.php';
                         <table class="table table-sm align-middle mb-0" id="tablaArqueo">
                             <thead>
                                 <tr>
-                                    <th style="color: #8A7565; font-size: 11.5px; text-transform: uppercase;">Producto</th>
-                                    <th class="text-center" style="color: #8A7565; font-size: 11.5px; text-transform: uppercase;">Sobrante ayer</th>
-                                    <th class="text-center" style="color: #8A7565; font-size: 11.5px; text-transform: uppercase;">Horneadas hoy</th>
-                                    <th class="text-center" style="color: #8A7565; font-size: 11.5px; text-transform: uppercase;">Vendidas</th>
-                                    <th class="text-center" style="color: #8A7565; font-size: 11.5px; text-transform: uppercase;">Sobrante hoy (contado)</th>
-                                    <th class="text-center" style="color: #8A7565; font-size: 11.5px; text-transform: uppercase;">Diferencia</th>
-                                    <th class="text-end" style="color: #8A7565; font-size: 11.5px; text-transform: uppercase;">Valor</th>
+                                    <th>Producto</th>
+                                    <th class="text-center">Sobrante ayer</th>
+                                    <th class="text-center">Horneadas hoy</th>
+                                    <th class="text-center">Vendidas</th>
+                                    <th class="text-center">Sobrante hoy (contado)</th>
+                                    <th class="text-center">Diferencia</th>
+                                    <th class="text-end">Valor</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -87,19 +87,19 @@ include_once __DIR__ . '/../Layouts/header.php';
                                         ?>
                                         <tr class="arq-row" data-precio="<?= $precio ?>" data-ayer="<?= $ayer ?>" data-horn="<?= $horn ?>">
                                             <td>
-                                                <strong style="color: #4A2F20; display: block;"><?= htmlspecialchars($p['nombre']) ?></strong>
-                                                <span class="text-muted" style="font-size: 12px;">$<?= number_format($precio, 2) ?> c/u</span>
+                                                <strong style="display: block;"><?= htmlspecialchars($p['nombre']) ?></strong>
+                                                <span class="text-muted">$<?= number_format($precio, 2) ?> c/u</span>
                                             </td>
-                                            <td class="text-center" style="color: #4A2F20;"><?= $ayer ?></td>
-                                            <td class="text-center" style="color: #4A2F20;"><?= $horn ?></td>
+                                            <td class="text-center"><?= $ayer ?></td>
+                                            <td class="text-center"><?= $horn ?></td>
                                             <td class="text-center">
                                                 <input type="number" min="0" name="vendidas[<?= $pid ?>]" class="form-control arq-table-input mx-auto js-arq-vend" value="<?= $vend ?>">
                                             </td>
                                             <td class="text-center">
                                                 <input type="number" min="0" name="sobrante[<?= $pid ?>]" class="form-control arq-table-input mx-auto js-arq-sobr" value="<?= $sobr ?>">
                                             </td>
-                                            <td class="text-center js-arq-dif" style="color: #4A2F20;"><?= $dif ?></td>
-                                            <td class="text-end js-arq-val" style="color: #4A2F20; font-weight: 600;">$<?= number_format($val, 2) ?></td>
+                                            <td class="text-center js-arq-dif"><?= $dif ?></td>
+                                            <td class="text-end js-arq-val">$<?= number_format($val, 2) ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
@@ -107,7 +107,7 @@ include_once __DIR__ . '/../Layouts/header.php';
                         </table>
                     </div>
 
-                    <div class="text-muted" style="font-size: 12px; line-height: 1.5;">
+                    <div class="text-muted">
                         Diferencia = sobrante de ayer + horneadas – vendidas – sobrante contado. Positiva: pan que no aparece (merma o faltante). Negativa: excedente (revise si faltó anotar una tanda).
                     </div>
                 </div>
@@ -119,17 +119,17 @@ include_once __DIR__ . '/../Layouts/header.php';
                     
                     <div class="arq-summary-grid mb-4">
                         <div class="arq-sub-card">
-                            <span class="arq-sub-label">Ingreso esperado</span>
+                            <span class="arq-sub-label"><i class="ph-duotone ph-coins"></i>Ingreso esperado</span>
                             <strong class="arq-sub-val" id="resEsperado">$0.00</strong>
                             <span class="arq-sub-desc">vendidas × precio</span>
                         </div>
                         <div class="arq-sub-card arq-sub-warning">
-                            <span class="arq-sub-label">Valor de la diferencia</span>
+                            <span class="arq-sub-label"><i class="ph-duotone ph-trend-down"></i>Valor de la diferencia</span>
                             <strong class="arq-sub-val" id="resDiferencia">$0.00</strong>
                             <span class="arq-sub-desc">pérdida estimada si es positiva</span>
                         </div>
                         <div class="arq-sub-card arq-sub-info">
-                            <span class="arq-sub-label">Descuadre de caja</span>
+                            <span class="arq-sub-label"><i class="ph-duotone ph-scales"></i>Descuadre de caja</span>
                             <strong class="arq-sub-val" id="resDescuadre">—</strong>
                             <span class="arq-sub-desc">dinero contado – esperado</span>
                         </div>
@@ -146,8 +146,8 @@ include_once __DIR__ . '/../Layouts/header.php';
                         </div>
                     </div>
 
-                    <button type="submit" class="btn text-white px-4 py-2" style="background: #4A2F20; border-radius: 10px; font-weight: 600;">
-                        Guardar arqueo
+                    <button type="submit" class="btn text-white px-4 py-2 btn-brand">
+                        <i class="ph-duotone ph-floppy-disk"></i>Guardar arqueo
                     </button>
                 </div>
             </div>
@@ -157,30 +157,30 @@ include_once __DIR__ . '/../Layouts/header.php';
             <div class="arq-card mb-4">
                 <h3 class="arq-card-title">Historial reciente</h3>
                 <?php if (empty($historial)): ?>
-                    <div class="text-muted text-center py-5" style="font-size: 14px;">
-                        Aún no hay arqueos guardados.
+                    <div class="text-muted text-center py-5">
+                        <span class="empty-state"><i class="ph-duotone ph-clock-counter-clockwise"></i>Aún no hay arqueos guardados.</span>
                     </div>
                 <?php else: ?>
                     <div class="table-responsive">
                         <table class="table table-sm align-middle mb-0">
                             <thead>
                                 <tr>
-                                    <th style="color: #8A7565; font-size: 11.5px; text-transform: uppercase;">Fecha</th>
-                                    <th class="text-end" style="color: #8A7565; font-size: 11.5px; text-transform: uppercase;">Esperado</th>
-                                    <th class="text-end" style="color: #8A7565; font-size: 11.5px; text-transform: uppercase;">En caja</th>
-                                    <th style="color: #8A7565; font-size: 11.5px; text-transform: uppercase;">Observaciones</th>
-                                    <th class="text-end" style="color: #8A7565; font-size: 11.5px; text-transform: uppercase;">Acción</th>
+                                    <th>Fecha</th>
+                                    <th class="text-end">Esperado</th>
+                                    <th class="text-end">En caja</th>
+                                    <th>Observaciones</th>
+                                    <th class="text-end">Acción</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($historial as $h): ?>
                                     <tr>
-                                        <td style="color: #4A2F20; font-weight: 600;"><?= date('d/m/Y', strtotime($h['fecha'])) ?></td>
+                                        <td><?= date('d/m/Y', strtotime($h['fecha'])) ?></td>
                                         <td class="text-end">$<?= number_format((float)$h['esperado'], 2) ?></td>
                                         <td class="text-end"><?= $h['caja_real'] !== null ? '$' . number_format((float)$h['caja_real'], 2) : '—' ?></td>
                                         <td class="small text-muted"><?= htmlspecialchars($h['nota'] ?? '-') ?></td>
                                         <td class="text-end">
-                                            <a href="ArqueoController.php?fecha=<?= urlencode($h['fecha']) ?>" class="btn btn-sm btn-outline-secondary" style="font-size: 12px;">Ver</a>
+                                            <a href="ArqueoController.php?fecha=<?= urlencode($h['fecha']) ?>" class="btn btn-sm btn-outline-secondary">Ver</a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

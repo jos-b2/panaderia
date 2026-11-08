@@ -1,285 +1,824 @@
 /* ==========================================================================
-   PANADERÍA DON LEO - DASHBOARD ESTÁTICO (SIN SCROLL)
+   MENÚ PRINCIPAL, VENTANA DE PERFIL Y AVISOS - PANADERÍA DON LEO
    Ubicación: /panaderia/Assets/css/dashboard.css
+
+   El menú principal ocupa exactamente la pantalla: sin desplazamiento y sin
+   barra fija. Las tarjetas se ajustan al alto disponible.
    ========================================================================== */
 
-/* Bloquear scroll en html y body para mantener la vista estática */
-html, body.dashboard-bg {
-    height: 100vh !important;
-    max-height: 100vh !important;
-    overflow: hidden !important; /* Elimina por completo cualquier scroll */
-    margin: 0;
-    padding: 0;
-}
-
-/* Fondo general con imagen de panadería y capa oscura */
+/* ---------- Fondo y estructura de pantalla completa ---------- */
 body.dashboard-bg {
-    background: linear-gradient(rgba(18, 12, 8, 0.80), rgba(18, 12, 8, 0.90)), 
-                url('/panaderia/Assets/img/bg-panaderia.jpg') no-repeat center center fixed !important;
-    background-size: cover !important;
-    color: #ffffff !important;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    margin: 0;
+    background:
+        radial-gradient(90% 70% at 50% 35%, rgba(20, 12, 7, 0.55) 0%, rgba(20, 12, 7, 0.92) 100%),
+        url('/panaderia/Assets/img/bg-panaderia.jpg') no-repeat center center;
+    background-size: cover;
+    color: #ffffff;
     display: flex;
     flex-direction: column;
 }
 
-/* Navbar superior compacta y fija */
-.navbar-custom {
-    background-color: rgba(25, 18, 13, 0.9) !important;
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+/* ---------- Barra superior (no fija) ---------- */
+.menu-topbar {
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: clamp(10px, 1.8vh, 16px) clamp(16px, 4vw, 40px);
+    background: linear-gradient(180deg, rgba(20, 12, 7, 0.85), rgba(20, 12, 7, 0.55));
+    border-bottom: 1px solid rgba(192, 138, 62, 0.35);
 }
 
-/* Contenedor principal ajustado al espacio restante sin desbordar */
+.menu-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #FFFFFF;
+    text-decoration: none;
+    min-width: 0;
+}
+
+.menu-brand:hover { color: #FFFFFF; }
+
+.menu-brand-mark {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    background: #C08A3E;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 3px rgba(192, 138, 62, 0.2);
+}
+
+.menu-brand span {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 19px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.menu-actions { display: flex; align-items: center; gap: 10px; }
+
+.menu-user, .menu-logout {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 42px;
+    padding: 0 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #F3E4CF;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: border-color .15s ease, background .15s ease, color .15s ease;
+}
+
+.menu-user:hover { border-color: #C08A3E; background: rgba(192, 138, 62, 0.14); color: #FFFFFF; }
+.menu-logout:hover { border-color: #A33A2C; background: #A33A2C; color: #FFFFFF; }
+.menu-logout:hover i { color: #FFFFFF; }
+
+.menu-user i, .menu-logout i { color: #C08A3E; }
+
+.menu-user-text { text-align: left; }
+.menu-user-name { font-size: 13px; color: #FFFFFF; }
+.menu-user-role {
+    font-size: 10px;
+    color: #C9A77D;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.menu-logout { font-size: 13px; font-weight: 600; letter-spacing: 0.03em; }
+
+/* ---------- Contenido: ocupa el alto que queda ---------- */
 .dashboard-main-container {
     flex: 1;
+    min-height: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    padding: 1rem 1.5rem;
-    overflow: hidden;
+    padding: clamp(14px, 3.5vh, 44px) clamp(16px, 4vw, 40px);
 }
 
-/* Títulos con proporciones controladas */
+.menu-hero {
+    flex-shrink: 0;
+    text-align: center;
+    margin-bottom: clamp(12px, 3vh, 34px);
+}
+
+.menu-hero-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.32em;
+    color: #D9A85F;
+    margin-bottom: clamp(6px, 1.4vh, 14px);
+}
+
+.menu-hero-kicker::before,
+.menu-hero-kicker::after {
+    content: "";
+    width: 36px;
+    height: 1px;
+    background: rgba(217, 168, 95, 0.7);
+}
+
 .dashboard-hero-title {
-    font-size: 2.2rem;
-    font-weight: 900;
-    letter-spacing: 1.5px;
-    color: #ffffff !important;
-    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
-    margin-bottom: 0.2rem;
+    font-family: var(--font-head);
+    font-size: clamp(26px, min(5vw, 6.5vh), 54px);
+    font-weight: 700;
+    color: #FFFFFF;
+    line-height: 1.08;
+    margin: 0 0 clamp(4px, 1vh, 10px);
+    text-shadow: 0 2px 22px rgba(0, 0, 0, 0.55);
 }
 
 .dashboard-hero-subtitle {
-    color: rgba(255, 255, 255, 0.7) !important;
-    font-size: 0.95rem;
-    margin-bottom: 1.5rem;
+    color: rgba(255, 255, 255, 0.68);
+    font-size: clamp(13px, 1.9vh, 15px);
+    margin: 0;
 }
 
-/* Tarjetas traslúcidas adaptadas milimétricamente al espacio */
+/* ---------- Cuadrícula de módulos: llena el espacio sin desbordar ---------- */
+.menu-grid {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    max-width: 1100px;
+    max-height: 460px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: minmax(0, 1fr);
+    gap: clamp(8px, 1.6vh, 14px);
+}
+
+@media (max-width: 991.98px) {
+    .menu-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); max-height: 560px; }
+}
+
+@media (max-width: 639.98px) {
+    .menu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: none; gap: 8px; }
+}
+
+.menu-cell { min-height: 0; }
+
+.menu-link { display: block; height: 100%; text-decoration: none; }
+
 .card-menu-item {
-    background-color: rgba(40, 31, 24, 0.85) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    border-radius: 14px !important;
-    padding: 1.2rem 0.8rem !important;
-    transition: all 0.2s ease-in-out;
-    backdrop-filter: blur(10px);
-    cursor: pointer;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    position: relative;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    text-align: center;
+    padding: clamp(8px, 2vh, 22px) 14px;
+    overflow: hidden;
+    background: linear-gradient(160deg, rgba(48, 31, 20, 0.86), rgba(28, 18, 11, 0.86));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(8px);
+    transition: background .2s ease, border-color .2s ease, transform .2s ease;
 }
 
-.card-menu-item:hover {
-    transform: translateY(-5px) scale(1.02);
-    background-color: rgba(55, 42, 32, 0.95) !important;
-    border-color: rgba(212, 163, 115, 0.6) !important;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+/* Línea dorada que crece al pasar el ratón */
+.card-menu-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 2px;
+    width: 0;
+    background: #C08A3E;
+    transition: width .3s ease;
 }
 
-/* Iconos de las tarjetas */
+.menu-link:hover .card-menu-item,
+.menu-link:focus-visible .card-menu-item {
+    background: linear-gradient(160deg, rgba(64, 41, 26, 0.95), rgba(36, 23, 15, 0.95));
+    border-color: rgba(192, 138, 62, 0.45);
+    transform: translateY(-3px);
+}
+
+.menu-link:hover .card-menu-item::before { width: 100%; }
+
 .card-menu-item .card-icon {
-    font-size: 1.8rem;
-    color: #d4a373 !important;
-    margin-bottom: 0.5rem;
-    transition: transform 0.2s ease;
+    width: clamp(34px, 6vh, 54px);
+    height: clamp(34px, 6vh, 54px);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(192, 138, 62, 0.5);
+    color: #D9A85F;
+    margin-bottom: clamp(6px, 1.6vh, 14px);
+    transition: background .2s ease, color .2s ease;
 }
 
-.card-menu-item:hover .card-icon {
-    transform: scale(1.1);
-    color: #ffffff !important;
+.card-menu-item .card-icon .ico {
+    width: clamp(18px, 3vh, 26px);
+    height: clamp(18px, 3vh, 26px);
 }
 
-/* Textos dentro de las cards */
+.menu-link:hover .card-icon { background: #C08A3E; color: #24170F; }
+
 .card-menu-item .card-title {
-    font-weight: 800;
-    font-size: 0.85rem;
-    letter-spacing: 0.8px;
-    color: #ffffff !important;
-    margin-bottom: 0.1rem;
+    font-weight: 700;
+    font-size: clamp(11px, 1.7vh, 13px);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    margin-bottom: 4px;
 }
 
 .card-menu-item .card-desc {
-    font-size: 0.72rem;
-    color: rgba(255, 255, 255, 0.55) !important;
+    font-size: clamp(11px, 1.6vh, 12.5px);
+    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.55);
 }
 
-/* ==========================================================
-   ESTILOS AISLADOS PARA EL MODAL DE PERFIL - PANADERÍA DON LEO
-   ================================================---------- */
+/* Pantallas bajas: se oculta la descripción para que todo quepa */
+@media (max-height: 560px) {
+    .card-menu-item .card-desc { display: none; }
+}
+
+/* Celular */
+@media (max-width: 639.98px) {
+    .menu-hero-kicker { display: none; }
+    .card-menu-item .card-title { font-size: 11px; letter-spacing: 0.1em; }
+    .menu-user-text, .menu-logout span { display: none; }
+    .menu-user, .menu-logout { width: 42px; padding: 0; justify-content: center; }
+    .menu-brand span { font-size: 17px; }
+}
+
+@media (max-width: 639.98px) and (max-height: 700px) {
+    .card-menu-item .card-desc { display: none; }
+}
+
+/* Teléfono acostado o pantallas muy bajas: se permite desplazar para no cortar */
+@media (max-height: 460px) {
+    body.dashboard-bg { height: auto; min-height: 100vh; overflow: auto; }
+    .menu-grid { flex: none; grid-auto-rows: 96px; max-height: none; }
+}
+
+/* Pie de página del menú */
+body.dashboard-bg .footer-panel {
+    flex-shrink: 0;
+    margin: 0 !important;
+    padding: clamp(8px, 1.5vh, 14px) 16px;
+    background: rgba(20, 12, 7, 0.88) !important;
+    border-top: 1px solid rgba(192, 138, 62, 0.35) !important;
+}
+
+/* ==========================================================================
+   VENTANA DE PERFIL
+   ========================================================================== */
 .profile-modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(43, 33, 24, 0.85);
-    backdrop-filter: blur(6px);
-    z-index: 999999;
+    inset: 0;
+    background:
+        radial-gradient(70% 60% at 50% 40%, rgba(36, 23, 15, 0.7), rgba(12, 7, 4, 0.92));
+    backdrop-filter: blur(8px);
+    z-index: 2000;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 16px;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.35s ease, visibility 0.35s ease;
+    transition: opacity .3s ease, visibility .3s ease;
 }
 
-.profile-modal-overlay.active {
-    opacity: 1;
-    visibility: visible;
-}
+.profile-modal-overlay.active { opacity: 1; visibility: visible; }
 
-.profile-card-modal-extended {
-    background-color: #FEFAE0; /* Crema institucional */
-    max-width: 820px;
-    width: 92%;
-    border-radius: 2rem;
-    overflow: hidden;
-    box-shadow: 0px 1.5rem 2.5rem rgba(0, 0, 0, 0.5);
+/* Tarjeta */
+.pf-card {
     position: relative;
-    max-height: 90vh;
+    width: 100%;
+    max-width: 780px;
+    max-height: calc(100vh - 32px);
+    max-height: calc(100dvh - 32px);
     overflow-y: auto;
-    border: 3px solid #D4A373;
-    font-family: 'Montserrat', sans-serif;
+    scrollbar-width: thin;
+    background: var(--surface);
+    color: var(--ink);
+    font-family: var(--font-body);
+    box-shadow: 0 40px 90px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(192, 138, 62, 0.35);
+    transform: translateY(18px) scale(0.98);
+    opacity: 0;
+    transition: transform .4s cubic-bezier(.2, .8, .2, 1), opacity .3s ease;
 }
 
-.profile-left-card {
-    background-color: #FFFFFF;
-    border-radius: 1.5rem;
-    overflow: hidden;
-    box-shadow: 0 0.5rem 1rem rgba(107, 66, 38, 0.15);
+.profile-modal-overlay.active .pf-card { transform: none; opacity: 1; }
+
+.pf-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 5;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(20, 12, 7, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #FFFFFF;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    transition: background .15s ease, border-color .15s ease;
 }
 
-.profile-banner-modal {
+.pf-close:hover { background: var(--danger); border-color: var(--danger); }
+
+/* Portada */
+.pf-cover {
+    position: relative;
+    height: 210px;
+    background-color: var(--espresso);
     background-position: center;
     background-size: cover;
-    height: 10rem;
+    transition: background-image .3s ease;
+}
+
+.pf-cover::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(20, 12, 7, 0.55) 0%, rgba(20, 12, 7, 0.2) 40%, rgba(20, 12, 7, 0.35) 65%, rgba(20, 12, 7, 0.85) 100%);
+}
+
+.pf-cover::after {
+    content: "";
+    position: absolute;
+    inset: 14px;
+    border: 1px solid rgba(217, 168, 95, 0.4);
+    pointer-events: none;
+}
+
+.pf-cover-kicker {
+    position: absolute;
+    left: 30px;
+    top: 30px;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #E8C089;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+
+.pf-cover-kicker::before {
+    content: "";
+    width: 28px;
+    height: 1px;
+    background: #E8C089;
+}
+
+/* Identidad: foto montada sobre la portada */
+.pf-head {
+    position: relative;
     display: flex;
     align-items: flex-end;
-    justify-content: center;
+    gap: 22px;
+    padding: 0 30px 24px;
+    margin-top: -64px;
+    border-bottom: 1px solid var(--line);
+}
+
+.pf-avatar {
     position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+    width: 132px;
+    height: 132px;
+    padding: 5px;
+    background: linear-gradient(135deg, #E8C089, #B67F33 55%, #7A5220);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
 }
 
-.profile-avatar-modal {
-    width: 6.5rem;
-    height: 6.5rem;
-    border-radius: 50%;
-    border: 4px solid #FFFFFF;
-    object-fit: cover;
-    transform: translateY(50%);
-    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.3);
-    background-color: #D4A373;
-}
-
-.profile-close-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: rgba(107, 66, 38, 0.8);
-    color: #FEFAE0;
-    border: none;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    font-size: 20px;
-    cursor: pointer;
-    z-index: 20;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s, transform 0.2s;
-}
-
-.profile-close-btn:hover {
-    background: #6B4226;
-    transform: scale(1.1);
-}
-
-.metric-card-custom {
-    background-color: #FFFFFF;
-    border-radius: 1.2rem;
-    padding: 1rem;
-    box-shadow: 0 0.4rem 0.8rem rgba(107, 66, 38, 0.08);
-    border: 1px solid #e0d6c3;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+.pf-avatar img,
+.pf-avatar .pf-initial {
+    width: 100%;
     height: 100%;
+    border: 4px solid var(--surface);
 }
 
-.metric-icon-box {
-    width: 45px;
-    height: 45px;
-    border-radius: 12px;
-    background-color: #fcf4e8;
-    color: #6B4226;
+.pf-avatar img { display: none; object-fit: cover; background: var(--surface-2); }
+.pf-avatar.has-photo img { display: block; }
+.pf-avatar.has-photo .pf-initial { display: none; }
+
+.pf-avatar .pf-initial {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    background: linear-gradient(160deg, #3B2417, #1F140D);
+    color: #E8C089;
+    font-family: var(--font-head);
+    font-size: 54px;
+    font-weight: 700;
 }
 
-/* Acordeón suave para el formulario de edición */
+.pf-identity {
+    flex: 1;
+    min-width: 0;
+    padding-bottom: 4px;
+}
+
+.pf-role {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 11px;
+    margin-bottom: 10px;
+    background: var(--ink);
+    color: #E8C089;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.pf-name {
+    font-family: var(--font-head);
+    font-size: clamp(26px, 3.4vw, 34px);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--ink);
+    margin: 0 0 8px;
+    overflow-wrap: anywhere;
+}
+
+.pf-handle {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.pf-handle span { display: inline-flex; align-items: center; gap: 7px; }
+.pf-handle span:first-child { color: var(--accent-dk); font-weight: 600; }
+
+.pf-edit-btn {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 42px;
+    padding: 0 18px;
+    margin-bottom: 4px;
+    background: var(--surface);
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+}
+
+.pf-edit-btn:hover { background: var(--ink); color: #FEFAE0; }
+
+/* Cuerpo */
+.pf-body {
+    padding: 26px 30px 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    background:
+        radial-gradient(500px 220px at 100% 0%, rgba(192, 138, 62, 0.06), transparent 70%),
+        var(--surface);
+}
+
+.pf-section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 14px;
+}
+
+.pf-section-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+}
+
+/* Estadísticas */
+.pf-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.pf-stat {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 18px 18px 16px;
+    background: linear-gradient(150deg, #FFFFFF, #FBF4E8);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--accent);
+    overflow: hidden;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.pf-stat:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(36, 23, 15, 0.08); }
+
+.pf-stat-icon {
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-lt);
+    color: var(--accent-dk);
+    font-size: 14px;
+}
+
+.pf-stat strong {
+    font-family: var(--font-head);
+    font-variant-numeric: lining-nums;
+    font-feature-settings: "lnum" 1;
+    font-size: 34px;
+    line-height: 1;
+    color: var(--ink);
+    margin-top: 6px;
+}
+
+.pf-stat small {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+/* Datos de la cuenta */
+.pf-info {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 0;
+    border: 1px solid var(--line);
+    background: #FFFFFF;
+}
+
+.pf-info > div {
+    padding: 14px 16px;
+    border-right: 1px solid var(--line-soft);
+    min-width: 0;
+}
+
+.pf-info > div:last-child { border-right: 0; }
+
+.pf-info dt {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+
+.pf-info dd {
+    margin: 0;
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pf-info dd i { font-size: 7px; vertical-align: middle; margin-right: 6px; }
+.pf-info .pf-ok  { color: var(--success); }
+.pf-info .pf-off { color: var(--danger); }
+
+/* Formulario de edición (desplegable) */
 .edit-profile-section {
     max-height: 0;
     overflow: hidden;
     opacity: 0;
-    transition: max-height 0.4s ease-in-out, opacity 0.3s ease-in-out, margin-top 0.3s ease;
+    margin-top: -26px;
+    transition: max-height .45s ease, opacity .3s ease, margin-top .3s ease;
 }
 
 .edit-profile-section.open {
-    max-height: 450px;
+    max-height: 640px;
     opacity: 1;
-    margin-top: 1rem;
+    margin-top: 0;
 }
 
-/* ==========================================================
-   ALERTA FLOTANTE SUPERPUESTA (TOAST) - PANADERÍA DON LEO
-   ================================================---------- */
+.pf-form {
+    padding: 22px;
+    background: #FFFFFF;
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--accent);
+}
+
+.pf-uploads {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.pf-drop {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 120px;
+    padding: 18px 12px;
+    text-align: center;
+    border: 1px dashed #CDB894;
+    background: var(--surface-2);
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease;
+}
+
+.pf-drop:hover { border-color: var(--accent); background: var(--accent-lt); }
+
+.pf-drop input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.pf-drop i { font-size: 22px; color: var(--accent-dk); }
+
+.pf-drop-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.pf-drop-name {
+    font-size: 12px;
+    color: var(--muted);
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pf-drop.has-file { border-style: solid; border-color: var(--success); background: #EEF4EC; }
+.pf-drop.has-file i { color: var(--success); }
+.pf-drop.has-file .pf-drop-name { color: var(--success); font-weight: 600; }
+
+.pf-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+/* ---------- Perfil en pantallas pequeñas ---------- */
+@media (max-width: 680px) {
+    .pf-cover { height: 160px; }
+    .pf-cover-kicker { display: none; }
+
+    .pf-head {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 14px;
+        padding: 0 20px 22px;
+        margin-top: -70px;
+    }
+
+    .pf-avatar { width: 120px; height: 120px; }
+    .pf-handle { justify-content: center; }
+    .pf-edit-btn { width: 100%; justify-content: center; }
+
+    .pf-body { padding: 22px 18px 24px; }
+
+    .pf-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .pf-stat { padding: 14px 10px 12px; text-align: center; align-items: center; }
+    .pf-stat-icon { position: static; margin-bottom: 4px; }
+    .pf-stat strong { font-size: 26px; margin-top: 0; }
+    .pf-stat small { font-size: 9.5px; letter-spacing: 0.04em; }
+
+    .pf-info { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pf-info > div:nth-child(2) { border-right: 0; }
+    .pf-info > div:nth-child(-n+2) { border-bottom: 1px solid var(--line-soft); }
+
+    .pf-uploads { grid-template-columns: 1fr 1fr; }
+    .pf-form { padding: 18px; }
+    .pf-form-actions .btn { flex: 1; }
+}
+
+/* ==========================================================================
+   AVISO FLOTANTE (TOAST)
+   ========================================================================== */
 .toast-floating-alert {
     position: fixed;
-    top: 25px;
-    right: 25px;
-    z-index: 9999999; /* Por encima de cualquier modal */
-    background-color: #FEFAE0; /* Crema */
-    border-left: 6px solid #D4A373; /* Trigo */
-    color: #6B4226; /* Corteza */
-    padding: 14px 22px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+    top: 20px;
+    right: 20px;
+    left: auto;
+    max-width: calc(100vw - 40px);
+    z-index: 3000;
+    background-color: var(--surface);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    color: var(--ink);
+    padding: 14px 20px;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
     display: flex;
     align-items: center;
     gap: 12px;
-    font-family: 'Montserrat', sans-serif;
-    animation: slideInToast 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    font-family: var(--font-body);
+    animation: slideInToast .35s ease-out forwards;
 }
 
 @keyframes slideInToast {
-    from {
-        opacity: 0;
-        transform: translateY(-30px) scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-.toast-floating-alert.fade-out {
-    animation: slideOutToast 0.4s ease forwards;
-}
+.toast-floating-alert.fade-out { animation: slideOutToast .35s ease forwards; }
 
 @keyframes slideOutToast {
-    from {
-        opacity: 1;
-        transform: translateY(0) scale(1);
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-12px); }
+}
+
+/* ==========================================================================
+   ANIMACIONES DEL MENÚ PRINCIPAL
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+    .menu-topbar { animation: entrarSuave .5s ease backwards; }
+
+    .menu-hero > * { animation: entrarArriba .7s cubic-bezier(.2, .7, .2, 1) backwards; }
+    .menu-hero > :nth-child(2) { animation-delay: .08s; }
+    .menu-hero > :nth-child(3) { animation-delay: .16s; }
+
+    .menu-cell { animation: entrarEscala .55s cubic-bezier(.2, .7, .2, 1) backwards; }
+    .menu-cell:nth-child(1) { animation-delay: .20s; }
+    .menu-cell:nth-child(2) { animation-delay: .26s; }
+    .menu-cell:nth-child(3) { animation-delay: .32s; }
+    .menu-cell:nth-child(4) { animation-delay: .38s; }
+    .menu-cell:nth-child(5) { animation-delay: .44s; }
+    .menu-cell:nth-child(6) { animation-delay: .50s; }
+    .menu-cell:nth-child(7) { animation-delay: .56s; }
+    .menu-cell:nth-child(8) { animation-delay: .62s; }
+
+    /* Ícono de cada tarjeta: leve giro al pasar el ratón */
+    .card-menu-item .card-icon i { transition: transform .3s cubic-bezier(.2, .8, .2, 1); }
+    .menu-link:hover .card-icon i { transform: scale(1.12) rotate(-6deg); }
+}
+
+/* Íconos Phosphor del Menú principal */
+.card-menu-item .card-icon { width: clamp(42px, 8vh, 64px) !important; height: clamp(42px, 8vh, 64px) !important; }
+.card-menu-item .card-icon i { font-size: clamp(24px, 4.4vh, 34px); }
+.menu-brand-mark { display: flex; align-items: center; justify-content: center; color: #24170F; font-size: 22px; }
+.menu-user i, .menu-logout i { font-size: 18px; }
+.toast-icon { font-size: 28px; color: var(--accent-dk); }
+
+/* Íconos Phosphor del perfil */
+.pf-role i { font-size: 14px; }
+.pf-handle i { font-size: 15px; }
+.pf-stat-icon i { font-size: 19px; }
+.pf-drop i { font-size: 30px; }
+.pf-edit-btn i { font-size: 17px; }
+.pf-info dd i { font-size: 8px; }
+
+/* Con 9 módulos (administrador) el escritorio usa 5 columnas: 5 + 4 */
+@media (min-width: 992px) {
+    .menu-grid:has(.menu-cell:nth-child(9)) {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        max-width: 1180px;
     }
-    to {
-        opacity: 0;
-        transform: translateY(-20px) scale(0.9);
-    }
+}
+
+/* En celular con muchos módulos, las tarjetas se compactan para caber sin desplazar */
+@media (max-width: 639.98px) {
+    .menu-grid:has(.menu-cell:nth-child(9)) .card-menu-item .card-desc { display: none; }
+    .menu-grid:has(.menu-cell:nth-child(9)) .card-menu-item { padding: 8px; }
 }

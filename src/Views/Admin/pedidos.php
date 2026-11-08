@@ -13,16 +13,16 @@ if (realpath($_SERVER["SCRIPT_FILENAME"]) === __FILE__) {
 include_once __DIR__ . '/../Layouts/header.php';
 ?>
 
-<link rel="stylesheet" href="/panaderia/Assets/css/siderbar.css">
-<link rel="stylesheet" href="/panaderia/Assets/css/pedidos.css">
+<link rel="stylesheet" href="/panaderia/Assets/css/siderbar.css?v=4">
+<link rel="stylesheet" href="/panaderia/Assets/css/pedidos.css?v=2">
 
 <div class="d-flex">
     <?php include_once __DIR__ . '/../Layouts/sidebar.php'; ?>
 
-    <div class="main flex-grow-1 p-4">
-        <div class="ped-header-section mb-4">
+    <div class="main">
+        <div class="page-head ped-header-section mb-4">
             <div class="d-flex justify-content-between align-items-baseline flex-wrap gap-2">
-                <h2 class="fw-bold" style="color: #6B4226;">Pedidos y encargos</h2>
+                <h2 class="fw-bold page-title">Pedidos y encargos</h2>
                 <div class="text-muted small">
                     <?php 
                         $meses = ["", "ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
@@ -33,16 +33,16 @@ include_once __DIR__ . '/../Layouts/header.php';
         </div>
 
         <?php if ($mensaje !== ''): ?>
-            <div class="alert alert-<?= $tipo_alerta ?> alert-dismissible fade show py-2 px-3 mb-3" role="alert" style="font-size: 13.5px; border-radius: 10px;">
+            <div class="alert alert-<?= $tipo_alerta ?> alert-dismissible fade show py-2 px-3 mb-3" role="alert">
                 <?= htmlspecialchars($mensaje) ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar" style="padding: 0.65rem;"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
             </div>
         <?php endif; ?>
 
         <div class="ped-actions-bar mb-4">
             <div>
-                <a class="ins-btn ins-btn-primary" href="<?= $mostrar_nuevo ? 'PedidosController.php' : 'PedidosController.php?nuevo=1' ?>" style="background: #C98A3B; color: #2d1b10; border-radius: 10px; padding: 9px 18px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <a class="ins-btn ins-btn-primary btn-accent" href="<?= $mostrar_nuevo ? 'PedidosController.php' : 'PedidosController.php?nuevo=1' ?>" style="display: inline-flex;">
+                    <i class="ph <?= $mostrar_nuevo ? 'ph-x' : 'ph-plus' ?>"></i>
                     <?= $mostrar_nuevo ? 'Cerrar formulario' : 'Nuevo pedido' ?>
                 </a>
             </div>
@@ -57,7 +57,7 @@ include_once __DIR__ . '/../Layouts/header.php';
 
                 <input type="text" name="buscar" value="<?= htmlspecialchars($buscar) ?>" class="form-control ped-input" placeholder="Buscar cliente o pedido">
 
-                <button type="submit" class="btn ped-btn-search">Buscar</button>
+                <button type="submit" class="btn ped-btn-search"><i class="ph-duotone ph-magnifying-glass"></i>Buscar</button>
             </form>
         </div>
 
@@ -68,37 +68,37 @@ include_once __DIR__ . '/../Layouts/header.php';
                     <input type="hidden" name="accion" value="crear">
                     <div class="row g-3 mb-3">
                         <div class="col-md-4">
-                            <label class="form-label small fw-semibold" style="color: #6b4531;">Nombre del cliente</label>
+                            <label class="form-label small fw-semibold">Nombre del cliente</label>
                             <input type="text" name="cliente_nombre" class="form-control ped-input" required>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label small fw-semibold" style="color: #6b4531;">Teléfono</label>
+                            <label class="form-label small fw-semibold">Teléfono</label>
                             <input type="text" name="cliente_telefono" class="form-control ped-input">
                         </div>
                         <div class="col-md-5">
-                            <label class="form-label small fw-semibold" style="color: #6b4531;">Fecha y hora de entrega</label>
+                            <label class="form-label small fw-semibold">Fecha y hora de entrega</label>
                             <input type="datetime-local" name="fecha_entrega" class="form-control ped-input" required>
                         </div>
                     </div>
                     <div class="row g-3 mb-3">
                         <div class="col-md-2">
-                            <label class="form-label small fw-semibold" style="color: #6b4531;">Cant. panes</label>
+                            <label class="form-label small fw-semibold">Cant. panes</label>
                             <input type="number" min="0" id="cantidadPanes" class="form-control ped-input" placeholder="Ej: 16">
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label small fw-semibold" style="color: #6b4531;">Descripción del pedido</label>
+                            <label class="form-label small fw-semibold">Descripción del pedido</label>
                             <input type="text" name="descripcion" id="descPedido" class="form-control ped-input" placeholder="Ej: 16 panes franceses..." required>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label small fw-semibold" style="color: #6b4531;">Total ($)</label>
+                            <label class="form-label small fw-semibold">Total ($)</label>
                             <input type="number" step="0.01" min="0" name="total" id="totalPedido" class="form-control ped-input" value="0.00" required>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label small fw-semibold" style="color: #6b4531;">Abono inicial ($)</label>
+                            <label class="form-label small fw-semibold">Abono inicial ($)</label>
                             <input type="number" step="0.01" min="0" name="abono_inicial" class="form-control ped-input" value="0.00">
                         </div>
                     </div>
-                    <button type="submit" class="btn text-white px-4 py-2" style="background: #4A2F20; border-radius: 10px; font-weight: 600;">Guardar pedido</button>
+                    <button type="submit" class="btn text-white px-4 py-2 btn-brand"><i class="ph-duotone ph-floppy-disk"></i>Guardar pedido</button>
                 </form>
             </div>
         <?php endif; ?>
@@ -108,9 +108,9 @@ include_once __DIR__ . '/../Layouts/header.php';
             
             <?php if (empty($pedidos)): ?>
                 <div class="text-center py-5">
-                    <div class="text-muted mb-3" style="font-size: 15px;">No hay pedidos con este filtro.</div>
-                    <div class="text-muted d-inline-flex align-items-center gap-2" style="font-size: 12.5px;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <div class="text-muted mb-3 empty-state"><i class="ph-duotone ph-clipboard-text"></i>No hay pedidos con este filtro.</div>
+                    <div class="text-muted d-inline-flex align-items-center gap-2">
+                        <i class="ph-duotone ph-lock-key"></i>
                         Los datos de clientes son confidenciales y solo se muestran a usuarios con sesión iniciada.
                     </div>
                 </div>
@@ -119,12 +119,12 @@ include_once __DIR__ . '/../Layouts/header.php';
                     <table class="table table-sm align-middle mb-0">
                         <thead>
                             <tr>
-                                <th style="color: #8A7565; font-size: 11.5px; text-transform: uppercase;">Cliente</th>
-                                <th style="color: #8A7565; font-size: 11.5px; text-transform: uppercase;">Pedido</th>
-                                <th style="color: #8A7565; font-size: 11.5px; text-transform: uppercase;">Entrega</th>
-                                <th class="text-end" style="color: #8A7565; font-size: 11.5px; text-transform: uppercase;">Total / Saldo</th>
-                                <th style="color: #8A7565; font-size: 11.5px; text-transform: uppercase;">Estado</th>
-                                <th style="color: #8A7565; font-size: 11.5px; text-transform: uppercase;">Abonar</th>
+                                <th>Cliente</th>
+                                <th>Pedido</th>
+                                <th>Entrega</th>
+                                <th class="text-end">Total / Saldo</th>
+                                <th>Estado</th>
+                                <th>Abonar</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -132,22 +132,22 @@ include_once __DIR__ . '/../Layouts/header.php';
                                 <?php $saldo = max(0, $p['total'] - $p['abonado']); ?>
                                 <tr>
                                     <td>
-                                        <strong style="color: #4A2F20;"><?= htmlspecialchars($p['cliente']) ?></strong>
+                                        <strong><?= htmlspecialchars($p['cliente']) ?></strong>
                                         <?php if ($p['telefono']): ?>
                                             <div class="small text-muted"><?= htmlspecialchars($p['telefono']) ?></div>
                                         <?php endif; ?>
                                     </td>
-                                    <td style="color: #4A2F20;"><?= htmlspecialchars($p['descripcion']) ?></td>
+                                    <td><?= htmlspecialchars($p['descripcion']) ?></td>
                                     <td class="text-nowrap small text-muted"><?= date('d/m/Y H:i', strtotime($p['fecha_entrega'])) ?></td>
                                     <td class="text-end text-nowrap">
-                                        <div style="color: #4A2F20; font-weight: 600;">$<?= number_format($p['total'], 2) ?></div>
+                                        <div>$<?= number_format($p['total'], 2) ?></div>
                                         <div class="small <?= $saldo > 0 ? 'text-danger' : 'text-success' ?>">Saldo: $<?= number_format($saldo, 2) ?></div>
                                     </td>
                                     <td>
                                         <form method="post" action="PedidosController.php" class="m-0">
                                             <input type="hidden" name="accion" value="cambiar_estado">
                                             <input type="hidden" name="pedido_id" value="<?= (int)$p['id'] ?>">
-                                            <select name="estado" class="form-select form-select-sm js-auto-submit" style="border-radius: 8px; font-size: 12.5px;">
+                                            <select name="estado" class="form-select form-select-sm js-auto-submit">
                                                 <option value="pendiente" <?= $p['estado'] === 'pendiente' ? 'selected' : '' ?>>Pendiente</option>
                                                 <option value="en_produccion" <?= $p['estado'] === 'en_produccion' ? 'selected' : '' ?>>En producción</option>
                                                 <option value="listo" <?= $p['estado'] === 'listo' ? 'selected' : '' ?>>Listo</option>
@@ -161,8 +161,8 @@ include_once __DIR__ . '/../Layouts/header.php';
                                             <form method="post" action="PedidosController.php" class="d-flex gap-1 align-items-center m-0">
                                                 <input type="hidden" name="accion" value="abonar">
                                                 <input type="hidden" name="pedido_id" value="<?= (int)$p['id'] ?>">
-                                                <input type="number" step="0.01" min="0.01" max="<?= $saldo ?>" name="monto" class="form-control form-control-sm" style="width: 80px; border-radius: 8px;" placeholder="$" required>
-                                                <button type="submit" class="btn btn-sm btn-outline-secondary" style="border-radius: 8px;">+</button>
+                                                <input type="number" step="0.01" min="0.01" max="<?= $saldo ?>" name="monto" class="form-control form-control-sm" style="width: 80px;" placeholder="$" required>
+                                                <button type="submit" class="btn btn-sm btn-outline-secondary">+</button>
                                             </form>
                                         <?php else: ?>
                                             <span class="badge bg-success-subtle text-success border border-success-subtle">Pagado</span>

@@ -7,6 +7,9 @@
 require_once __DIR__ . '/../Config/current_user.php';
 require_once __DIR__ . '/../Models/RespaldoModel.php';
 
+// Solo administradores (se verifica antes de crear o descargar respaldos)
+soloAdministrador();
+
 $respaldoModel = new RespaldoModel($pdo, __DIR__ . '/../backups');
 
 $mensaje = '';

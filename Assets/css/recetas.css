@@ -1,41 +1,21 @@
-/* ==========================================================
-   ESTILOS EXCLUSIVOS DE LA VISTA DE RECETAS - PANADERÍA DON LEO
+/* ==========================================================================
+   RECETAS - PANADERÍA DON LEO
    Ubicación: /panaderia/Assets/css/recetas.css
-   ================================================---------- */
+   (La estructura, tarjetas y botones vienen de custom-theme.css)
+   ========================================================================== */
 
-/* Contenedor principal idéntico al panel e insumos */
-.main {
-    margin-left: 248px;
-    box-sizing: border-box;
-    width: calc(100% - 248px);
-    min-height: 100vh;
-    padding: 24px;
-    background-color: #FBF6EE;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-/* Cuadrícula de recetas (2 columnas responsivas) */
+/* Cuadrícula de recetas: se acomoda sola según el ancho */
 .rec-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
     gap: 20px;
 }
 
-@media (max-width: 992px) {
-    .rec-grid {
-        grid-template-columns: 1fr;
-    }
+@media (max-width: 575.98px) {
+    .rec-grid { grid-template-columns: 1fr; }
 }
 
-/* Tarjeta individual de receta */
 .rec-card {
-    background: #FFFDF9;
-    border: 1px solid #EADFCE;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(74, 47, 32, 0.04);
-    padding: 24px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -45,95 +25,406 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    margin-bottom: 16px;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--line-soft);
 }
 
-.rec-product-title {
-    font-family: Georgia, 'Palatino Linotype', serif;
-    color: #4A2F20;
-    font-size: 20px;
-    font-weight: 700;
-    margin: 0;
-}
+.rec-card-header .rec-product-title { margin: 0 !important; }
 
 .rec-price-tag {
-    font-size: 15px;
-    color: #4A2F20;
+    font-size: 13px;
+    color: var(--muted);
+    white-space: nowrap;
 }
 
 .rec-price-tag strong {
-    font-size: 18px;
-    color: #4A2F20;
+    font-family: var(--font-head);
+    font-size: 22px;
+    color: var(--ink);
 }
 
-/* Detalles de rendimiento y costos */
 .rec-details-grid {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
     font-size: 14px;
 }
 
 .rec-row-info {
     display: flex;
     justify-content: space-between;
+    gap: 12px;
+    text-align: right;
 }
 
-/* Lista de ingredientes */
+.rec-row-info > span:first-child {
+    text-align: left;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
 .rec-ingredients-list {
     list-style: none;
-    padding: 0;
+    padding: 14px 16px;
     margin: 0;
     display: flex;
     flex-direction: column;
     gap: 6px;
     font-size: 14px;
-    color: #3b2a20;
+    color: var(--ink);
+    background: var(--surface-2);
+    border-left: 2px solid var(--accent);
 }
 
 .rec-ingredients-list li {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     gap: 8px;
 }
 
 .rec-ingredients-list li::before {
-    content: "•";
-    color: #C98A3B;
-    font-weight: bold;
-    font-size: 16px;
+    content: "";
+    width: 5px;
+    height: 5px;
+    background: var(--accent);
+    flex-shrink: 0;
+    transform: translateY(-2px);
 }
 
 .rec-base-label {
-    color: #8A7565;
-    font-size: 12.5px;
+    color: var(--muted);
+    font-size: 12px;
 }
 
-/* Acciones de la tarjeta */
 .rec-card-actions {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
-/* Footer institucional unificado */
-.footer-panel {
-    background-color: #2a1f18 !important;
-    border-top: 1px solid #D4A373 !important;
-    color: #FEFAE0 !important;
+/* Fila de ingrediente del formulario */
+.rec-ing-row .btn { width: 100%; }
+
+@media (max-width: 767.98px) {
+    .rec-ing-row > .col-md-6 { flex: 0 0 100%; max-width: 100%; }
+    .rec-ing-row > .col-md-4 { flex: 1 1 0; }
+    .rec-ing-row > .col-md-2 { flex: 0 0 auto; width: auto; }
+}
+
+/* ==========================================================================
+   RECETA ESTILO LIBRO DE COCINA / REVISTA GASTRONÓMICA
+   ========================================================================== */
+.rec-grid { grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 26px; }
+
+.rec-card.recipe {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: 34px 34px 28px !important;
+    /* Papel crema con grano sutil y un marco interior fino, como página impresa */
+    background:
+        radial-gradient(120% 80% at 0% 0%, rgba(192, 138, 62, 0.07), transparent 60%),
+        radial-gradient(90% 70% at 100% 100%, rgba(107, 74, 54, 0.06), transparent 60%),
+        repeating-linear-gradient(0deg, rgba(59, 36, 23, 0.012) 0 2px, transparent 2px 4px),
+        #FFFCF5 !important;
+    border: 1px solid #E3D2B6 !important;
+    box-shadow:
+        inset 0 0 0 10px #FFFCF5,
+        inset 0 0 0 11px rgba(192, 138, 62, 0.35),
+        0 2px 4px rgba(36, 23, 15, 0.05),
+        0 18px 36px rgba(36, 23, 15, 0.08) !important;
+}
+
+.rec-card.recipe:hover {
+    transform: translateY(-4px) !important;
+    box-shadow:
+        inset 0 0 0 10px #FFFCF5,
+        inset 0 0 0 11px rgba(192, 138, 62, 0.55),
+        0 4px 8px rgba(36, 23, 15, 0.06),
+        0 26px 48px rgba(36, 23, 15, 0.13) !important;
+}
+
+/* ---------- Encabezado ---------- */
+.recipe-head {
+    position: relative;
     text-align: center;
-    padding: 12px 0;
-    font-size: 0.85rem;
-    margin: auto -24px -24px -24px !important;
+    padding: 0 96px;
 }
 
-/* Adaptación responsive móvil */
-@media (max-width: 820px) {
-    .main {
-        margin-left: 0;
-        width: 100%;
-        padding: 15px;
+.recipe-kicker {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--accent-dk);
+    margin-bottom: 10px;
+}
+
+.recipe-kicker-cat { color: var(--muted); }
+.recipe-kicker-cat::before { content: "·"; margin-right: 14px; color: var(--accent); }
+
+.recipe-title {
+    font-family: var(--font-head);
+    font-style: italic;
+    font-weight: 700;
+    font-size: clamp(28px, 2.6vw, 36px);
+    line-height: 1.05;
+    color: var(--ink);
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+/* Adorno: línea – espiga – línea */
+.recipe-ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 14px;
+    color: var(--accent);
+}
+
+.recipe-ornament span {
+    width: 52px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent));
+}
+
+.recipe-ornament span:last-child { background: linear-gradient(90deg, var(--accent), transparent); }
+.recipe-ornament i { font-size: 20px; }
+
+/* Precio como sello de tinta */
+.recipe-stamp {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 92px;
+    height: 92px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    color: #8E2F22;
+    border: 2px solid rgba(142, 47, 34, 0.75);
+    outline: 1px dashed rgba(142, 47, 34, 0.55);
+    outline-offset: -7px;
+    background: rgba(255, 252, 245, 0.6);
+    transform: rotate(8deg);
+    transition: transform .3s cubic-bezier(.2, .8, .2, 1);
+}
+
+.rec-card.recipe:hover .recipe-stamp { transform: rotate(0deg) scale(1.05); }
+
+.recipe-stamp small {
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.recipe-stamp strong {
+    font-family: var(--font-head);
+    font-size: 22px;
+    line-height: 1;
+    font-variant-numeric: lining-nums;
+    font-feature-settings: "lnum" 1;
+}
+
+/* Cinta "Fuera de venta" para recetas inactivas */
+.recipe-off {
+    position: absolute;
+    top: 0;
+    left: -6px;
+    padding: 4px 10px;
+    background: var(--muted);
+    color: #FFFFFF;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    transform: rotate(-8deg);
+}
+
+.rec-card.recipe.is-inactive { opacity: 0.72; filter: grayscale(0.45); }
+
+/* ---------- Introducción con letra capital ---------- */
+.recipe-intro {
+    font-family: var(--font-head);
+    font-style: italic;
+    font-variant-numeric: lining-nums;
+    font-feature-settings: "lnum" 1;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #5A4334;
+    margin: 0;
+}
+
+.recipe-intro::first-letter {
+    float: left;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 54px;
+    line-height: 0.82;
+    padding: 6px 10px 0 0;
+    color: var(--accent-dk);
+}
+
+.recipe-intro strong { color: var(--ink); font-weight: 700; }
+
+/* ---------- Ficha técnica ---------- */
+.recipe-facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 0;
+    border-top: 3px double #D9C6A5;
+    border-bottom: 3px double #D9C6A5;
+}
+
+.recipe-facts > div {
+    padding: 14px 8px 12px;
+    text-align: center;
+}
+
+.recipe-facts > div + div { border-left: 1px solid #E6D7BE; }
+
+.recipe-facts dt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+.recipe-facts dt i { font-size: 15px; color: var(--accent-dk); }
+
+.recipe-facts dd {
+    margin: 0;
+    font-family: var(--font-head);
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--ink);
+    font-variant-numeric: lining-nums;
+    font-feature-settings: "lnum" 1;
+}
+
+.recipe-facts dd small {
+    display: block;
+    margin-top: 5px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+}
+
+.recipe-facts dd.is-pos { color: var(--success); }
+.recipe-facts dd.is-neg { color: var(--danger); }
+
+/* ---------- Ingredientes con líneas de puntos ---------- */
+.recipe-subtitle {
+    font-family: var(--font-head);
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 12px;
+}
+
+.recipe-subtitle em {
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--muted);
+    margin-left: 6px;
+}
+
+.recipe-ingredients ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.recipe-ingredients li {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 14.5px;
+    color: var(--ink);
+}
+
+.ing-name { white-space: nowrap; }
+
+.ing-name em {
+    font-style: normal;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-dk);
+    border: 1px solid rgba(192, 138, 62, 0.5);
+    padding: 1px 5px;
+    margin-left: 8px;
+    vertical-align: 2px;
+}
+
+.ing-dots {
+    flex: 1;
+    min-width: 16px;
+    border-bottom: 2px dotted #CDB894;
+    transform: translateY(-4px);
+}
+
+.ing-qty {
+    white-space: nowrap;
+    font-family: var(--font-head);
+    font-style: italic;
+    font-weight: 700;
+    font-size: 15.5px;
+    color: var(--accent-dk);
+    font-variant-numeric: lining-nums;
+    font-feature-settings: "lnum" 1;
+}
+
+.recipe-ingredients li.is-base .ing-name { font-weight: 600; }
+
+/* ---------- Acciones ---------- */
+.recipe-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px solid #EADCC5;
+}
+
+/* ---------- Pantallas pequeñas ---------- */
+@media (max-width: 575.98px) {
+    .rec-grid { grid-template-columns: 1fr; }
+    .rec-card.recipe { padding: 26px 22px 22px !important; gap: 18px; }
+    .recipe-head { padding: 0; }
+    .recipe-stamp {
+        position: static;
+        margin: 16px auto 0;
+        width: 84px;
+        height: 84px;
+        transform: rotate(-4deg);
     }
-    .footer-panel {
-        margin: 20px -15px -15px -15px !important;
-    }
+    .recipe-facts dd { font-size: 21px; }
+    .recipe-facts dt { letter-spacing: 0.1em; }
+    .recipe-actions .btn { flex: 1; }
 }

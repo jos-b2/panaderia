@@ -7,6 +7,9 @@
 require_once __DIR__ . '/../Config/current_user.php';
 // UsuarioModel ya viene cargado desde current_user.php
 
+// Solo administradores (se verifica antes de procesar cualquier formulario)
+soloAdministrador();
+
 $usuarioModel = new UsuarioModel($pdo);
 
 $mensaje = '';
@@ -59,7 +62,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$lista_usuarios = $usuarioModel->listar();
+require_once __DIR__ . '/../Models/PerfilModel.php';
+
+$mesesCortos = ['', 'ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+
+// Datos de cada tarjeta: foto (si existe), inicial y fecha de alta
+$lista_usuarios = array_map(function ($u) use ($mesesCortos) {
+    $u['foto']    = PerfilModel::rutaImagen($u['foto_url'] ?? '', 'perfil', $u['id']);
+    $u['inicial'] = mb_strtoupper(mb_substr($u['nombre'], 0, 1));
+    $u['desde']   = '';
+    if (!empty($u['creado'])) {
+        $ts = strtotime($u['creado']);
+        $u['desde'] = $mesesCortos[(int)date('n', $ts)] . ' ' . date('Y', $ts);
+    }
+    return $u;
+}, $usuarioModel->listar());
+
+// Resumen del equipo
+$resumen = [
+    'total'     => count($lista_usuarios),
+    'admins'    => count(array_filter($lista_usuarios, fn($u) => $u['rol'] === 'admin')),
+    'empleados' => count(array_filter($lista_usuarios, fn($u) => $u['rol'] !== 'admin')),
+    'activos'   => count(array_filter($lista_usuarios, fn($u) => (int)$u['activo'] === 1)),
+];
 
 $usuario_actual_id = $usuario_id;
 $usuario_actual_nick = $_SESSION['usuario'] ?? '';

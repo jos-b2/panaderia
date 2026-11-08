@@ -2,7 +2,10 @@
 /**
  * Vista: ventana de Perfil - Panadería Don Leo
  * Ubicación: /panaderia/src/Views/Public/perfil.php
- * La prepara Controllers/PerfilController.php (GET)
+ * La prepara Controllers/PerfilController.php (GET). Estilos en Assets/css/dashboard.css
+ *
+ * IDs que usa dashboard.js: modalBannerDiv, modalAvatarImg, modalNombreText,
+ * btnEditIcon, btnEditText, secEditPerfil, formEditarPerfil
  */
 if (realpath($_SERVER["SCRIPT_FILENAME"]) === __FILE__) {
     header("Location: /panaderia/Controllers/DashboardController.php");
@@ -10,123 +13,108 @@ if (realpath($_SERVER["SCRIPT_FILENAME"]) === __FILE__) {
 }
 ?>
 
-<div class="profile-card-modal-extended p-4">
-    <!-- Botón de Cierre Superior -->
-    <button type="button" class="profile-close-btn" onclick="cerrarPerfilModal()">&times;</button>
+<article class="pf-card">
 
-    <div class="row g-4 align-items-center">
-        
-        <!-- COLUMNA IZQUIERDA: Tarjeta Personal -->
-        <div class="col-12 col-md-5">
-            <div class="profile-left-card">
-                <!-- Banner y Foto con IDs para actualización en tiempo real -->
-                <div id="modalBannerDiv" class="profile-banner-modal" style="background-image: url('<?php echo htmlspecialchars($bannerPerfil); ?>');">
-                    <img id="modalAvatarImg" src="<?php echo htmlspecialchars($fotoPerfil); ?>" alt="Avatar" class="profile-avatar-modal">
-                </div>
+    <button type="button" class="pf-close" onclick="cerrarPerfilModal()" aria-label="Cerrar perfil">&times;</button>
 
-                <!-- Datos Principales -->
-                <div class="text-center pt-5 px-3 pb-4">
-                    <h4 id="modalNombreText" class="fw-bold mt-2 mb-1" style="color: #6B4226;"><?php echo htmlspecialchars($nombreUsuario); ?></h4>
-                    <span class="badge rounded-pill px-3 py-1 my-1" style="background-color: #D4A373; color: #6B4226; font-weight: 700;">
-                        <?php echo $rolUsuario; ?>
-                    </span>
+    <!-- Portada -->
+    <div id="modalBannerDiv" class="pf-cover" style="background-image: url('<?= htmlspecialchars($bannerPerfil) ?>');">
+        <span class="pf-cover-kicker">Panadería Don Leo &middot; Perfil</span>
+    </div>
 
-                    <div class="d-flex justify-content-around my-3 py-2 border-top border-bottom" style="border-color: #e0d6c3 !important;">
-                        <div>
-                            <small class="text-muted d-block" style="font-size: 0.75rem;">ID Usuario</small>
-                            <span class="fw-bold" style="color: #6B4226;">#<?php echo $usuario_id; ?></span>
-                        </div>
-                        <div class="border-start" style="border-color: #e0d6c3 !important;"></div>
-                        <div>
-                            <small class="text-muted d-block" style="font-size: 0.75rem;">Estado</small>
-                            <span class="fw-bold" style="color: #606C38;"><i class="fa-solid fa-circle me-1" style="font-size: 0.5rem;"></i>Activo</span>
-                        </div>
-                    </div>
+    <!-- Identidad -->
+    <header class="pf-head">
+        <div class="pf-avatar <?= $fotoPerfil ? 'has-photo' : '' ?>">
+            <img id="modalAvatarImg" src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Foto de perfil">
+            <span class="pf-initial"><?= htmlspecialchars($inicial) ?></span>
+        </div>
 
-                    <!-- Botón para desplegar/ocultar edición -->
-                    <button type="button" onclick="toggleEdicionPerfil()" class="btn w-100 py-2 shadow-sm fw-bold border-0" style="background-color: #6B4226; color: #FEFAE0; border-radius: 1rem; transition: background 0.2s;">
-                        <i id="btnEditIcon" class="fa-solid fa-pen-to-square me-1"></i>
-                        <span id="btnEditText">Editar Perfil</span>
-                    </button>
-                </div>
+        <div class="pf-identity">
+            <span class="pf-role"><i class="ph-duotone <?= $rolUsuario === 'Administrador' ? 'ph-crown' : 'ph-user' ?>"></i><?= $rolUsuario ?></span>
+            <h3 id="modalNombreText" class="pf-name"><?= htmlspecialchars($nombreUsuario) ?></h3>
+            <div class="pf-handle">
+                <?php if ($loginUsuario !== ''): ?>
+                    <span>@<?= htmlspecialchars($loginUsuario) ?></span>
+                <?php endif; ?>
+                <?php if ($miembroDesde !== ''): ?>
+                    <span><i class="ph-duotone ph-calendar-blank"></i>Miembro desde el <?= $miembroDesde ?></span>
+                <?php endif; ?>
             </div>
         </div>
 
-        <!-- COLUMNA DERECHA: Rendimiento y Formulario Desplegable -->
-        <div class="col-12 col-md-7 d-flex flex-column justify-content-center">
-            
-            <div>
-                <h5 class="fw-bold mb-3" style="color: #6B4226;">
-                    <i class="fa-solid fa-chart-line me-2" style="color: #D4A373;"></i>Resumen de Rendimiento
-                </h5>
+        <button type="button" class="pf-edit-btn" onclick="toggleEdicionPerfil()">
+            <i id="btnEditIcon" class="ph-duotone ph-pencil-simple me-1"></i>
+            <span id="btnEditText">Editar perfil</span>
+        </button>
+    </header>
 
-                <!-- 2 Cards de Rendimiento -->
-                <div class="row g-3">
-                    <div class="col-12 col-sm-6">
-                        <div class="metric-card-custom">
-                            <div class="metric-icon-box">
-                                <i class="fa-solid fa-fire-burner"></i>
-                            </div>
-                            <div>
-                                <span class="d-block text-muted small fw-semibold" style="font-size: 0.75rem;">Producción Diaria</span>
-                                <span class="fs-5 fw-bold" style="color: #6B4226;">12 TANDAS</span>
-                                <small class="text-success d-block" style="font-size: 0.65rem; font-weight: 600;">
-                                    <i class="fa-solid fa-arrow-up me-1"></i>+15% esta semana
-                                </small>
-                            </div>
-                        </div>
-                    </div>
+    <div class="pf-body">
 
-                    <div class="col-12 col-sm-6">
-                        <div class="metric-card-custom">
-                            <div class="metric-icon-box">
-                                <i class="fa-solid fa-clipboard-check"></i>
-                            </div>
-                            <div>
-                                <span class="d-block text-muted small fw-semibold" style="font-size: 0.75rem;">Encargos Listos</span>
-                                <span class="fs-5 fw-bold" style="color: #6B4226;">28 PEDIDOS</span>
-                                <small class="text-success d-block" style="font-size: 0.65rem; font-weight: 600;">
-                                    <i class="fa-solid fa-check me-1"></i>100% Entregados
-                                </small>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Actividad real del usuario -->
+        <section class="pf-section">
+            <h4 class="pf-section-title">Actividad registrada</h4>
+            <div class="pf-stats">
+                <div class="pf-stat">
+                    <span class="pf-stat-icon"><i class="ph-duotone ph-fire"></i></span>
+                    <strong><?= number_format($stats['tandas']) ?></strong>
+                    <small>Tandas horneadas</small>
+                </div>
+                <div class="pf-stat">
+                    <span class="pf-stat-icon"><i class="ph-duotone ph-clipboard-text"></i></span>
+                    <strong><?= number_format($stats['pedidos']) ?></strong>
+                    <small>Pedidos registrados</small>
+                </div>
+                <div class="pf-stat">
+                    <span class="pf-stat-icon"><i class="ph-duotone ph-package"></i></span>
+                    <strong><?= number_format($stats['movimientos']) ?></strong>
+                    <small>Movimientos de inventario</small>
                 </div>
             </div>
+        </section>
 
-            <!-- SECCIÓN OCULTA: Formulario con ID para interceptar envío con JS -->
-            <div id="secEditPerfil" class="edit-profile-section">
-                <div class="p-3 rounded-4" style="background-color: #FFFFFF; border: 1px solid #D4A373;">
-                    <h6 class="fw-bold mb-3" style="color: #6B4226; font-size: 0.95rem;">
-                        <i class="fa-solid fa-sliders me-2"></i>Personalizar Datos Visuales
-                    </h6>
-
-                    <form id="formEditarPerfil" action="/panaderia/Controllers/PerfilController.php" method="POST" enctype="multipart/form-data">
-                        <div class="row g-2">
-                            <div class="col-12">
-                                <label class="form-label small fw-bold mb-1" style="color: #6B4226;">Nombre Visual:</label>
-                                <input type="text" name="nombre" class="form-control form-control-sm rounded-pill px-3" value="<?php echo htmlspecialchars($nombreUsuario); ?>" required>
-                            </div>
-                            <div class="col-12 col-sm-6">
-                                <label class="form-label small fw-bold mb-1" style="color: #6B4226;">Subir Foto de Perfil:</label>
-                                <input type="file" name="foto_archivo" class="form-control form-control-sm rounded-pill px-3" accept="image/png, image/jpeg, image/webp">
-                            </div>
-                            <div class="col-12 col-sm-6">
-                                <label class="form-label small fw-bold mb-1" style="color: #6B4226;">Subir Banner:</label>
-                                <input type="file" name="banner_archivo" class="form-control form-control-sm rounded-pill px-3" accept="image/png, image/jpeg, image/webp">
-                            </div>
-                        </div>
-
-                        <div class="mt-3 text-end">
-                            <button type="submit" class="btn btn-sm px-4 fw-bold" style="background-color: #6B4226; color: #FEFAE0; border-radius: 1rem;">
-                                Guardar Cambios
-                            </button>
-                        </div>
-                    </form>
+        <!-- Datos de la cuenta -->
+        <section class="pf-section">
+            <h4 class="pf-section-title">Datos de la cuenta</h4>
+            <dl class="pf-info">
+                <div><dt>Usuario</dt><dd><?= htmlspecialchars($loginUsuario ?: '—') ?></dd></div>
+                <div><dt>Rol</dt><dd><?= $rolUsuario ?></dd></div>
+                <div>
+                    <dt>Estado</dt>
+                    <dd class="<?= $activo ? 'pf-ok' : 'pf-off' ?>"><i class="ph-fill ph-circle"></i><?= $activo ? 'Activo' : 'Inactivo' ?></dd>
                 </div>
-            </div>
+                <div><dt>ID</dt><dd>#<?= (int)$usuario_id ?></dd></div>
+            </dl>
+        </section>
 
-        </div>
+        <!-- Edición (se despliega con "Editar perfil") -->
+        <section id="secEditPerfil" class="edit-profile-section">
+            <form id="formEditarPerfil" class="pf-form" action="/panaderia/Controllers/PerfilController.php" method="POST" enctype="multipart/form-data">
+                <h4 class="pf-section-title">Personalizar perfil</h4>
+
+                <label class="form-label" for="pfNombre">Nombre visible</label>
+                <input type="text" id="pfNombre" name="nombre" class="form-control mb-3" value="<?= htmlspecialchars($nombreUsuario) ?>" required>
+
+                <div class="pf-uploads">
+                    <label class="pf-drop">
+                        <input type="file" name="foto_archivo" accept="image/png, image/jpeg, image/webp" data-preview="avatar">
+                        <i class="ph-duotone ph-user-circle-plus"></i>
+                        <span class="pf-drop-title">Foto de perfil</span>
+                        <span class="pf-drop-name">JPG, PNG o WEBP</span>
+                    </label>
+                    <label class="pf-drop">
+                        <input type="file" name="banner_archivo" accept="image/png, image/jpeg, image/webp" data-preview="banner">
+                        <i class="ph-duotone ph-image"></i>
+                        <span class="pf-drop-title">Portada</span>
+                        <span class="pf-drop-name">JPG, PNG o WEBP</span>
+                    </label>
+                </div>
+
+                <div class="pf-form-actions">
+                    <button type="button" class="btn btn-outline-secondary" onclick="abrirPerfilModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-brand"><i class="ph ph-check"></i>Guardar cambios</button>
+                </div>
+            </form>
+        </section>
 
     </div>
-</div>
+</article>

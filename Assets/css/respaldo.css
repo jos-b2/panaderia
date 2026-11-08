@@ -1,71 +1,24 @@
-/* ==========================================================
-   ESTILOS EXCLUSIVOS DE LA VISTA DE RESPALDOS - PANADERÍA DON LEO
+/* ==========================================================================
+   RESPALDOS - PANADERÍA DON LEO
    Ubicación: /panaderia/Assets/css/respaldo.css
-   ================================================---------- */
+   (La estructura, tarjetas, botones y tablas vienen de custom-theme.css)
+   ========================================================================== */
 
-/* Contenedor principal idéntico a las demás vistas */
-.main {
-    margin-left: 248px;
-    box-sizing: border-box;
-    width: calc(100% - 248px);
-    min-height: 100vh;
-    padding: 24px;
-    background-color: #FBF6EE;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-/* Cuadrícula superior de 2 columnas */
 .res-grid-top {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 20px;
-    align-items: start;
+    align-items: stretch;
 }
 
-@media (max-width: 992px) {
-    .res-grid-top {
-        grid-template-columns: 1fr;
-    }
+@media (max-width: 991.98px) {
+    .res-grid-top { grid-template-columns: 1fr; }
 }
 
-/* Tarjetas contenedoras generales */
-.res-card {
-    background: #FFFDF9;
-    border: 1px solid #EADFCE;
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(74, 47, 32, 0.04);
-    padding: 24px;
-}
+.res-card ol li { margin-bottom: 4px; }
 
-.res-card-title {
-    font-family: Georgia, 'Palatino Linotype', serif;
-    color: #4A2F20;
-    font-size: 19px;
-    font-weight: 700;
-    margin-bottom: 16px;
-}
-
-/* Footer institucional unificado */
-.footer-panel {
-    background-color: #2a1f18 !important;
-    border-top: 1px solid #D4A373 !important;
-    color: #FEFAE0 !important;
-    text-align: center;
-    padding: 12px 0;
-    font-size: 0.85rem;
-    margin: auto -24px -24px -24px !important;
-}
-
-/* Adaptación responsive móvil */
-@media (max-width: 820px) {
-    .main {
-        margin-left: 0;
-        width: 100%;
-        padding: 15px;
-    }
-    .footer-panel {
-        margin: 20px -15px -15px -15px !important;
-    }
+.res-card .table td strong {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 13px;
+    word-break: break-all;
 }

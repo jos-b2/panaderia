@@ -94,7 +94,7 @@ foreach ($productos as $p) {
     ];
 }
 
-$ultimasTandas = $produccionModel->ultimasTandas(10);
+$ultimasTandas = $produccionModel->ultimasTandas(8);
 
 $pagina_activa = 'produccion';
 

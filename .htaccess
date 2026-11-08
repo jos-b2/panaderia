@@ -1,0 +1,18 @@
+# ==========================================================================
+#  Panadería Don Leo — protección de archivos internos
+#  El navegador solo debe ver las páginas (Controllers/) y los recursos
+#  públicos (Assets/). Todo lo demás se usa internamente desde PHP.
+# ==========================================================================
+
+# No mostrar listados de carpetas
+Options -Indexes
+
+# Carpetas internas: responden "no encontrado" (404) para no revelar que existen
+#   .git     -> repositorio con el historial del código
+#   backups  -> respaldos completos de la base de datos (se descargan desde Respaldos, con sesión de administrador)
+#   vendor   -> librerías de Composer (PHP las carga internamente)
+#   db       -> scripts SQL del esquema y datos iniciales
+RedirectMatch 404 /(\.git|backups|vendor|db)(/|$)
+
+# Archivos de configuración del proyecto
+RedirectMatch 404 /(composer\.(json|lock)|\.gitignore|\.htaccess)$

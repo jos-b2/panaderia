@@ -19,7 +19,7 @@ class UsuarioModel {
 
     public function obtenerConPerfil($id) {
         $stmt = $this->pdo->prepare("
-            SELECT U.nombre, U.rol, P.nombre_personalizado, P.foto_url, P.banner_url
+            SELECT U.nombre, U.usuario, U.rol, U.activo, U.creado, P.nombre_personalizado, P.foto_url, P.banner_url
             FROM usuarios U
             LEFT JOIN perfil P ON U.id = P.usuario_id
             WHERE U.id = :id
@@ -29,7 +29,12 @@ class UsuarioModel {
     }
 
     public function listar() {
-        return $this->pdo->query("SELECT id, nombre, usuario, rol, activo FROM usuarios ORDER BY id ASC")->fetchAll();
+        return $this->pdo->query("
+            SELECT U.id, U.nombre, U.usuario, U.rol, U.activo, U.creado, P.foto_url
+            FROM usuarios U
+            LEFT JOIN perfil P ON P.usuario_id = U.id
+            ORDER BY U.id ASC
+        ")->fetchAll();
     }
 
     public function existe($usuario) {

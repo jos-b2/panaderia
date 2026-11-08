@@ -55,9 +55,4 @@ class PanelModel {
     public function getVentasArqueoSemana() {
         return $this->pdo->query("SELECT fecha, COALESCE(SUM(vendidas), 0) AS total FROM arqueo_detalle WHERE fecha >= DATE_SUB(CURDATE(), INTERVAL 6 DAY) GROUP BY fecha")->fetchAll(PDO::FETCH_KEY_PAIR);
     }
-
-    /** Pedidos creados por fecha en los últimos 7 días (sin cancelados): [fecha => total] */
-    public function getPedidosSemana() {
-        return $this->pdo->query("SELECT DATE(creado) AS fecha, COUNT(*) AS total FROM pedidos WHERE DATE(creado) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND estado != 'cancelado' GROUP BY DATE(creado)")->fetchAll(PDO::FETCH_KEY_PAIR);
-    }
 }

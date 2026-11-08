@@ -11,10 +11,44 @@ class PerfilModel {
         $this->pdo = $pdo;
     }
 
+    /**
+     * URL pública de la foto o banner de un usuario. Usa la ruta guardada si el archivo existe;
+     * si no, busca {usuario_id}.{jpg|jpeg|png|webp} en Assets/img/{carpeta}. Devuelve "" si no hay.
+     */
+    public static function rutaImagen($urlGuardada, $carpeta, $usuario_id) {
+        $raiz = realpath(__DIR__ . "/..");
+        if ($urlGuardada && file_exists($raiz . str_replace("/panaderia", "", $urlGuardada))) {
+            return $urlGuardada;
+        }
+        foreach (["jpg", "jpeg", "png", "webp"] as $ext) {
+            if (file_exists("{$raiz}/Assets/img/{$carpeta}/{$usuario_id}.{$ext}")) {
+                return "/panaderia/Assets/img/{$carpeta}/{$usuario_id}.{$ext}";
+            }
+        }
+        return "";
+    }
+
     public function obtenerPorUsuario($usuario_id) {
         $stmt = $this->pdo->prepare("SELECT foto_url, banner_url FROM perfil WHERE usuario_id = :usuario_id");
         $stmt->execute([':usuario_id' => $usuario_id]);
         return $stmt->fetch() ?: [];
+    }
+
+    /**
+     * Actividad registrada por el usuario: tandas (no anuladas), pedidos y movimientos de inventario.
+     */
+    public function estadisticas($usuario_id) {
+        $contar = function ($sql) use ($usuario_id) {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$usuario_id]);
+            return (int)$stmt->fetchColumn();
+        };
+
+        return [
+            'tandas'      => $contar("SELECT COUNT(*) FROM producciones WHERE usuario_id = ? AND anulada = 0"),
+            'pedidos'     => $contar("SELECT COUNT(*) FROM pedidos WHERE usuario_id = ?"),
+            'movimientos' => $contar("SELECT COUNT(*) FROM movimientos WHERE usuario_id = ?"),
+        ];
     }
 
     /**

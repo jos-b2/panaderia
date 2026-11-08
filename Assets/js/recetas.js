@@ -4,7 +4,7 @@ const New = {
         modal.style.cssText = 'position:fixed;inset:0;background:rgba(28,17,10,0.65);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px;';
 
         const card = document.createElement('div');
-        card.style.cssText = 'width:100%;max-width:400px;background:#FFFDF9;border-radius:14px;overflow:hidden;box-shadow:0 20px 45px rgba(0,0,0,0.35);font-family:Montserrat,sans-serif;text-align:center;';
+        card.style.cssText = 'width:100%;max-width:400px;background:#FFFDF9;border-radius:0;overflow:hidden;box-shadow:0 20px 45px rgba(0,0,0,0.35);font-family:Montserrat,sans-serif;text-align:center;';
 
         card.innerHTML = `
             <div style="background:#6B4226;padding:26px 20px;display:flex;justify-content:center;align-items:center;">
@@ -19,8 +19,8 @@ const New = {
                 <p style="margin:0;font-size:14.5px;color:#4A4A4A;line-height:1.45;">${content}</p>
             </div>
             <div style="background:#F7F1E8;padding:14px 20px;display:flex;gap:12px;justify-content:center;border-top:1px solid #EADFCE;">
-                <button type="button" class="btn-cancel" style="background:#D4A373;color:#4A2F20;border:none;border-radius:8px;padding:9px 22px;font-size:14px;font-weight:700;cursor:pointer;">Cancelar</button>
-                <button type="button" class="btn-ok" style="background:#6B4226;color:#FEFAE0;border:none;border-radius:8px;padding:9px 22px;font-size:14px;font-weight:700;cursor:pointer;">${confirmText}</button>
+                <button type="button" class="btn-cancel" style="background:#D4A373;color:#4A2F20;border:none;border-radius:0;padding:9px 22px;font-size:14px;font-weight:700;cursor:pointer;">Cancelar</button>
+                <button type="button" class="btn-ok" style="background:#6B4226;color:#FEFAE0;border:none;border-radius:0;padding:9px 22px;font-size:14px;font-weight:700;cursor:pointer;">${confirmText}</button>
             </div>
         `;
 

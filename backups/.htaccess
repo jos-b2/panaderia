@@ -1,0 +1,3 @@
+# Segunda capa de protección: los respaldos nunca se sirven directamente.
+# Se descargan desde Controllers/RespaldoController.php (solo administradores).
+Require all denied

@@ -4,6 +4,10 @@
  * Ubicación: /panaderia/config/db.php
  */
 
+// Zona horaria local (UTC-6). Debe coincidir con la de MySQL/Windows para que
+// "hoy" sea el mismo día en PHP (date) y en las consultas (CURDATE).
+date_default_timezone_set('America/El_Salvador');
+
 $host = 'localhost';
 $dbname = 'panaderia_don_leo';
 $username = 'root';
