@@ -4,11 +4,20 @@
  * Ubicación: /panaderia/src/Views/Admin/usuarios.php
  * La prepara Controllers/UsuariosController.php
  */
+
 // Si se abre esta vista directamente (dirección vieja), ir a su controlador
 if (realpath($_SERVER["SCRIPT_FILENAME"]) === __FILE__) {
     header("Location: /panaderia/Controllers/UsuariosController.php");
     exit;
 }
+
+// Inicializar variables por defecto para evitar advertencias del editor
+$mensaje = $mensaje ?? '';
+$tipo_alerta = $tipo_alerta ?? '';
+$resumen = $resumen ?? ['total' => 0, 'admins' => 0, 'empleados' => 0, 'activos' => 0];
+$lista_usuarios = $lista_usuarios ?? [];
+$usuario_actual_id = $usuario_actual_id ?? 0;
+$usuario_actual_nick = $usuario_actual_nick ?? '';
 
 include_once __DIR__ . '/../Layouts/header.php';
 ?>
@@ -97,7 +106,7 @@ include_once __DIR__ . '/../Layouts/header.php';
 
                                 <div class="usr-person-top">
                                     <div class="usr-avatar">
-                                        <?php if ($u['foto']): ?>
+                                        <?php if (!empty($u['foto'])): ?>
                                             <img src="<?= htmlspecialchars($u['foto']) ?>" alt="">
                                         <?php else: ?>
                                             <span><?= htmlspecialchars($u['inicial']) ?></span>
@@ -121,7 +130,7 @@ include_once __DIR__ . '/../Layouts/header.php';
                                     <li class="<?= $u['activo'] ? 'usr-on' : 'usr-off' ?>">
                                         <i class="ph-fill ph-circle"></i><?= $u['activo'] ? 'Activo' : 'Inactivo' ?>
                                     </li>
-                                    <?php if ($u['desde']): ?>
+                                    <?php if (!empty($u['desde'])): ?>
                                         <li><i class="ph-duotone ph-calendar-blank"></i>Desde <?= $u['desde'] ?></li>
                                     <?php endif; ?>
                                 </ul>
@@ -163,6 +172,9 @@ include_once __DIR__ . '/../Layouts/header.php';
 
                         <label class="form-label" for="nuNombre">Nombre completo</label>
                         <input type="text" id="nuNombre" name="nombre" class="form-control mb-3" placeholder="Ej. María López" required>
+
+                        <label class="form-label" for="nuCorreo">Correo electrónico</label>
+                        <input type="email" id="nuCorreo" name="correo" class="form-control mb-3" placeholder="Ej. maria@correo.com" required>
 
                         <div class="row g-3 mb-3">
                             <div class="col-sm-6 col-xl-12 col-xxl-6">

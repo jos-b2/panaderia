@@ -12,14 +12,21 @@ class UsuarioModel {
     }
 
     public function buscarActivoPorUsuario($usuario) {
-        $stmt = $this->pdo->prepare("SELECT id, nombre, usuario, clave, rol FROM usuarios WHERE usuario = :usuario AND activo = 1 LIMIT 1");
+        $stmt = $this->pdo->prepare("SELECT id, nombre, usuario, correo, clave, rol FROM usuarios WHERE usuario = :usuario AND activo = 1 LIMIT 1");
         $stmt->execute([':usuario' => $usuario]);
+        return $stmt->fetch();
+    }
+
+    // Nuevo método para buscar usuario por correo (utilizado en la recuperación de contraseña)
+    public function obtenerPorCorreo($correo) {
+        $stmt = $this->pdo->prepare("SELECT id, nombre, usuario, correo, rol, activo FROM usuarios WHERE correo = :correo AND activo = 1 LIMIT 1");
+        $stmt->execute([':correo' => $correo]);
         return $stmt->fetch();
     }
 
     public function obtenerConPerfil($id) {
         $stmt = $this->pdo->prepare("
-            SELECT U.nombre, U.usuario, U.rol, U.activo, U.creado, P.nombre_personalizado, P.foto_url, P.banner_url
+            SELECT U.nombre, U.usuario, U.correo, U.rol, U.activo, U.creado, P.nombre_personalizado, P.foto_url, P.banner_url
             FROM usuarios U
             LEFT JOIN perfil P ON U.id = P.usuario_id
             WHERE U.id = :id
@@ -30,7 +37,7 @@ class UsuarioModel {
 
     public function listar() {
         return $this->pdo->query("
-            SELECT U.id, U.nombre, U.usuario, U.rol, U.activo, U.creado, P.foto_url
+            SELECT U.id, U.nombre, U.usuario, U.correo, U.rol, U.activo, U.creado, P.foto_url
             FROM usuarios U
             LEFT JOIN perfil P ON P.usuario_id = U.id
             ORDER BY U.id ASC
@@ -43,10 +50,11 @@ class UsuarioModel {
         return (bool)$stmt->fetch();
     }
 
-    public function crear($nombre, $usuario, $clave, $rol) {
+    // Actualizado para recibir y guardar el correo electrónico
+    public function crear($nombre, $usuario, $correo, $clave, $rol) {
         $hash = password_hash($clave, PASSWORD_DEFAULT);
-        $stmt = $this->pdo->prepare("INSERT INTO usuarios (nombre, usuario, clave, rol) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$nombre, $usuario, $hash, $rol]);
+        $stmt = $this->pdo->prepare("INSERT INTO usuarios (nombre, usuario, correo, clave, rol) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$nombre, $usuario, $correo, $hash, $rol]);
     }
 
     /** Cambio de clave hecho por el administrador: también quita la obligación de cambiarla. */

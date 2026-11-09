@@ -561,4 +561,8 @@ body.login-body {
     transition: background .15s ease;
 }
 
+.form-box form {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
 .alert_footer span:hover { background-color: var(--espresso); }
